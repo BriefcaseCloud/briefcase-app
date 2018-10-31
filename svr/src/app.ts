@@ -4,6 +4,7 @@ import express from "express";
 import logger from "morgan";
 import errorHandler from "errorhandler";
 import { IndexRoute } from "./routes/index";
+import { AuthRoute } from "./routes/auth";
 
 /**
  * The server.
@@ -92,6 +93,7 @@ export class Server {
     router = express.Router();
 
     IndexRoute.create(router);
+    AuthRoute.create(router);
 
     //use router middleware
     this.app.use(router);
