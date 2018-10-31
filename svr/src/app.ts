@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express from "express";
 import logger from "morgan";
+import path from "path";
 import errorHandler from "errorhandler";
 import { IndexRoute } from "./routes/index";
 import { AuthRoute } from "./routes/auth";
@@ -79,6 +80,7 @@ export class Server {
 
     //error handling
     this.app.use(errorHandler());
+    this.app.use(express.static(path.join(__dirname, "public")));
   }
 
   /**

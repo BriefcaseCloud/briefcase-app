@@ -15,7 +15,7 @@ export class AuthRoute  {
    */
   public static create(router: Router) {
     //log
-    console.log("[AuthRoute::create] Creating index route.");
+    console.log("[AuthRoute::create] Creating Auth route.");
 
     //add get ids route
     router.get("/auth/", (req: Request, res: Response, next: NextFunction) => {
