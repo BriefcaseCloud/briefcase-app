@@ -8,26 +8,32 @@
 </template>
 
 <script>
+import UserService from '@/services/UserService';
 export default {
   name: 'Auth',
   data() {
     return {
-      users: [
-        // Temp list of users, will need to add a call to the api and add users to db
-        { label: 'Bob' },
-        { label: 'jimbo' },
-      ],
-      selected: { label: '' }, // selected user
+      users: [],
+      selected: '', // selected user
     };
+  },
+  created () {
+      this.getUsers();
   },
 
   methods: {
-    login() {
-      if (this.selected.label !== '') {
-        this.$root.$emit('userId', this.selected.label); // emits the user id to the parent app to set the current user
-        this.$router.replace({ path: `/user/${this.selected.label}/home` }); // reroutes to user home page
-      } else {
-        console.error('A username and password must be present');
+    async getUsers() {
+        var response = await UserService.fetchUsers();
+        this.users = response.data;
+    },
+    async login() {
+        var response = await UserService.fetchAuthToken({user: this.selected});
+        
+        if (response) {
+            this.$root.$emit('userId', this.selected); // emits the user id to the parent app to set the current user
+            this.$router.replace({ path: `/user/${this.selected}/home` }); // rerodutes to user home page
+        } else {
+            console.error('A valid username is required');
       }
     },
   },

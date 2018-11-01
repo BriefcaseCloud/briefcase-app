@@ -39,7 +39,7 @@ export class AuthRoute  {
   public indexGet(req: Request, res: Response, next: NextFunction) {
     res
       .status(200)
-      .jsonp([1234, 2345, 3456, 4567, 5678, 6789])
+      .jsonp(['Bob','Jim','Jack','Sukdip','Big Daddy 69'])
       .end();
   }
 
