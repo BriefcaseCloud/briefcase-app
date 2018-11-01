@@ -32,7 +32,7 @@ export default {
   },
   mounted() {
     if (!this.authenticated) {
-      this.$router.replace({ name: 'login' });
+      this.$router.replace({ name: 'login' }); //return to login page if no token is present
     }
   },
   methods: {

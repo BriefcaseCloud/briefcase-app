@@ -11,25 +11,26 @@
 import UserService from '@/services/UserService';
 export default {
   name: 'Auth',
+
   data() {
     return {
-      users: [],
+      users: [], //user list
       selected: '', // selected user
     };
   },
+
   created () {
-      this.getUsers();
+      this.getUsers(); // runs getUser when page loads.
   },
 
   methods: {
     async getUsers() {
-        var response = await UserService.fetchUsers();
+        var response = await UserService.fetchUsers(); //fetch user list from server
         this.users = response.data;
     },
     async login() {
-        var response = await UserService.fetchAuthToken({user: this.selected});
-        
-        if (response) {
+        var response = await UserService.fetchAuthToken({user: this.selected}); //fetch success token from server
+        if (response.data.success) {
             this.$root.$emit('userId', this.selected); // emits the user id to the parent app to set the current user
             this.$router.replace({ path: `/user/${this.selected}/home` }); // rerodutes to user home page
         } else {

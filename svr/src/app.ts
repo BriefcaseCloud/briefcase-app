@@ -6,7 +6,7 @@ import path from "path";
 import errorHandler from "errorhandler";
 import { IndexRoute } from "./routes/index";
 import { AuthRoute } from "./routes/auth";
-import cors from 'cors';
+import cors from 'cors'; //allows local requests and responses
 
 const options:cors.CorsOptions = {
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],

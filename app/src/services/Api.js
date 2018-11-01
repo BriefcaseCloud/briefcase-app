@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios' //library for http requests
 
 export default() => {
   return axios.create({
