@@ -1,16 +1,17 @@
 <template>
-  <div class='home'>
-    <p>this is a home page for app</p>
+  <div class='login'>
+    <Auth />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import Auth from '@/components/Auth.vue';
 
 export default {
-  name: 'home',
+  name: 'login',
   components: {
+    Auth,
   },
 };
 </script>

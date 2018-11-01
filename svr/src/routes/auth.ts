@@ -15,7 +15,7 @@ export class AuthRoute  {
    */
   public static create(router: Router) {
     //log
-    console.log("[AuthRoute::create] Creating index route.");
+    console.log("[AuthRoute::create] Creating Auth route.");
 
     //add get ids route
     router.get("/auth/", (req: Request, res: Response, next: NextFunction) => {
@@ -39,7 +39,7 @@ export class AuthRoute  {
   public indexGet(req: Request, res: Response, next: NextFunction) {
     res
       .status(200)
-      .jsonp([1234, 2345, 3456, 4567, 5678, 6789])
+      .jsonp(['Bob','Jim','Jack','Sukdip','Big Daddy 69'])
       .end();
   }
 
@@ -54,7 +54,7 @@ export class AuthRoute  {
    */
   public indexPost(req: Request, res: Response, next: NextFunction) {
     res
-      .status(200)
+      .status(404)
       .jsonp({
         success: true
       })

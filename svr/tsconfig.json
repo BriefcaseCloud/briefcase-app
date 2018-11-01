@@ -8,13 +8,11 @@
     "sourceMap": true,
     "rootDir": "./src",
     "outDir": "./dist",
+    "esModuleInterop": true,
   },
   "include": [
     "src/**/*.ts",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "exclude": [
-    "node_modules"
-  ]
 }

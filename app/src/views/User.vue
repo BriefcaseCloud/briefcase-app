@@ -1,16 +1,17 @@
 <template>
-  <div class='home'>
-    <p>this is a home page for app</p>
+  <div class='user'>
+    <Skills />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import Skills from '@/components/Skills.vue';
 
 export default {
-  name: 'home',
+  name: 'userhome',
   components: {
+    Skills,
   },
 };
 </script>

@@ -2,9 +2,19 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express from "express";
 import logger from "morgan";
+import path from "path";
 import errorHandler from "errorhandler";
 import { IndexRoute } from "./routes/index";
 import { AuthRoute } from "./routes/auth";
+import cors from 'cors';
+
+const options:cors.CorsOptions = {
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    origin: "http://localhost:8080",
+    preflightContinue: false
+};
 
 /**
  * The server.
@@ -79,6 +89,7 @@ export class Server {
 
     //error handling
     this.app.use(errorHandler());
+    this.app.use(express.static(path.join(__dirname, "public")));
   }
 
   /**
@@ -91,6 +102,7 @@ export class Server {
   private routes() {
     let router: express.Router;
     router = express.Router();
+    router.use(cors(options));
 
     IndexRoute.create(router);
     AuthRoute.create(router);
