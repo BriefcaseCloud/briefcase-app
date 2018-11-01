@@ -7,5 +7,4 @@ export default {
   fetchAuthToken (params) {
     return Api().post('auth', params)
   }
-
 }

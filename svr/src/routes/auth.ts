@@ -54,7 +54,7 @@ export class AuthRoute  {
    */
   public indexPost(req: Request, res: Response, next: NextFunction) {
     res
-      .status(200)
+      .status(404)
       .jsonp({
         success: true
       })

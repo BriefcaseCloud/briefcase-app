@@ -14,6 +14,7 @@
     "@types/vue-select": "^2.4.0",
     "axios": "^0.18.0",
     "cors": "^2.8.4",
+    "vee-validate": "^2.1.1",
     "vue": "^2.5.17",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",

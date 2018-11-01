@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link v-if="!authenticated" to="/">Home </router-link>
-      <router-link v-if="authenticated" :to="{path: `/user/${userId}/home`}">Home </router-link>
+      <router-link v-if="authenticated" to="{path: `/user/${userId}/home`}">Home </router-link>
       <router-link v-if="!authenticated" to='/auth/login'>| Login </router-link>
       <router-link v-if="authenticated" to='/auth/login' v-on:click.native="logout()" replace>| Logout </router-link>
     </div>
