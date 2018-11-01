@@ -36,7 +36,6 @@
             },
 
             removeUseCase(id) {
-
                 this.usecases.splice(id, 1)
             }
         }
@@ -59,6 +58,7 @@
         background-color: azure;
         border-bottom: 5px solid lightgrey;
         color: darkgrey;
+        text-align: left;
     }
 
     input {
@@ -74,13 +74,5 @@
         float: right;
     }
 
-    .fade-slide-enter-active, .fade-slide-leave-active {
-        transition: opacity 0.25s ease-out;
-    }
-
-    .fade-slide-enter, .fade-slide-leave-to {
-        opacity: 0;
-        height: 0;
-    }
 
 </style>

@@ -17,7 +17,7 @@ export default {
       selected: '', // selected user
     };
   },
-  created () {
+  created() {
       this.getUsers();
   },
 
@@ -31,7 +31,7 @@ export default {
         
         if (response) {
             this.$root.$emit('userId', this.selected); // emits the user id to the parent app to set the current user
-            this.$router.replace({ path: `/user/${this.selected}/home` }); // rerodutes to user home page
+            this.$router.replace({ path: `/user/${this.selected}/dashboard` }); // reroutes to user home page
         } else {
             console.error('A valid username is required');
       }

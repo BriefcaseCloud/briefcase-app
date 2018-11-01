@@ -23,7 +23,7 @@
 <script>
     import Vue from 'vue'
     import UseCases from './UseCases.vue'
-    import 'v-slim-dialog/dist/v-slim-dialog.css'
+    import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css'
     import SlimDialog from 'v-slim-dialog'
 
     Vue.use(SlimDialog);
@@ -32,7 +32,7 @@
         name: 'Projects',
         components: {
             UseCases,
-            SlimDialog
+            SlimDialog,
         },
         data() {
             return {
@@ -99,6 +99,7 @@
     }
 
     .projectName {
+        text-align: left;
         padding: 20px;
         font-size: 1.3em;
         background-color: azure;
