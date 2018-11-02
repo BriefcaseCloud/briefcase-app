@@ -5,6 +5,7 @@ import logger from "morgan";
 import path from "path";
 import errorHandler from "errorhandler";
 import { Router } from './router'
+import { Storage } from './storage'
 
 /**
  * The server.
@@ -41,6 +42,9 @@ export class Server {
 
     //add routes
     Router.init(this.app)
+
+    // add storage
+    Storage.init();
   }
 
   /**
