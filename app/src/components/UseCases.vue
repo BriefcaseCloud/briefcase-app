@@ -1,19 +1,16 @@
 <template>
     <div class="usecases">
         <ul>
-            <transition-group name="fade-slide">
-                <li v-for="(data, index) in usecases" :key="index">
-                    {{data.usecase}}
-                    <i class="fa fa-minus-circle" v-on:click="removeUseCase(index)"></i>
-                </li>
-            </transition-group>
-            <transition name="fade-slide">
-                <li>
-                    <form @submit.prevent="addUseCase">
-                        <input type="text" placeholder="Add usecase..." v-model="usecase"/>
-                    </form>
-                </li>
-            </transition>
+            <li v-for="(data, index) in usecases" :key="index">
+                UseCase: {{data}}
+                <i class="fa fa-minus-circle" v-on:click="removeUseCase(index)"></i>
+            </li>
+
+            <li>
+                <form @submit.prevent="addUseCase">
+                    <input type="text" placeholder="Add usecase..." v-model="usecase"/>
+                </form>
+            </li>
         </ul>
     </div>
 </template>
@@ -21,39 +18,44 @@
 
 <script>
     export default {
-            name: "UseCases",
-            data(){
-                return {
-                    usecase: '',
-                    usecases: []
-                }
-            },
+        name: 'UseCases',
 
-        methods : {
-            addUseCase(){
-                this.usecases.push({usecase: this.usecase});
+        props: {
+            usecases: Array,
+        },
+
+        data() {
+            return {
+                usecase: '',
+            };
+        },
+
+        methods: {
+
+            addUseCase() {
+                this.usecases.push(this.usecase);
                 this.usecase = '';
             },
 
             removeUseCase(id) {
-                this.usecases.splice(id, 1)
-            }
-        }
-    }
+                this.usecases.splice(id, 1);
+            },
+        },
+    };
 </script>
 
 <style scoped>
     @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
     @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+
     ul {
         margin: 0;
-        padding: 0px;
+        padding: 0;
         list-style-type: none;
     }
 
     ul li {
         padding: 10px;
-        background-color: white;
         font-size: 1em;
         background-color: azure;
         border-bottom: 5px solid lightgrey;

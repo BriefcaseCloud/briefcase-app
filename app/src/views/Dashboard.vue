@@ -1,24 +1,28 @@
 <template>
     <div id="dashboard">
         <div id="username">
-            Signed in as {{$route.params.userId}}
+            Signed in as {{this.userName}}
         </div>
         <Projects/>
     </div>
 </template>
 
 <script>
-    import Projects from '../components/Projects.vue'
+    import Projects from '../components/Projects.vue';
+
 
     export default {
         name: 'dashboard',
+
         components: {
             Projects,
         },
+
         props: {
-            userId: String,
-        }
-    }
+            userId: Number,
+            userName: String,
+        },
+    };
 </script>
 
 <style>

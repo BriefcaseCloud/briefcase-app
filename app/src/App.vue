@@ -24,7 +24,7 @@
         data() {
             return {
                 authenticated: false,
-                userId: '',
+                userId: String,
             };
         },
         created() {
@@ -53,7 +53,7 @@
             },
             logout() {
                 // removes user and resets authenticated status on logout
-                this.user = '';
+                this.userId = '';
                 this.authenticated = false;
             },
         },

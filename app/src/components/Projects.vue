@@ -6,12 +6,15 @@
         </div>
         <ul>
             <li v-for="(data, index) in projects" :key="index">
-                <div class="projectName" v-on:click="data.selected = !data.selected">
-                    {{data.project}}
+                <div class="projectName" v-on:click="data.Selected = !data.Selected">
+                    {{data.ProjName}}
                     <i class="fa fa-times" v-on:click="removeProject(index), data.selected = !data.selected"> </i>
                 </div>
-                <div class="list" v-show="data.selected">
-                    <UseCases/>
+                <div class="list" v-show="data.Selected">
+                    <UseCases
+                            v-bind:key="index"
+                            v-bind:usecases="data.UseCasesArray"
+                    />
                 </div>
 
 
@@ -21,10 +24,11 @@
 </template>
 
 <script>
-    import Vue from 'vue'
-    import UseCases from './UseCases.vue'
-    import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css'
-    import SlimDialog from 'v-slim-dialog'
+    import Vue from 'vue';
+    import UseCases from './UseCases.vue';
+    import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css';
+    import SlimDialog from 'v-slim-dialog';
+    import UserService from '../services/UserService';
 
     Vue.use(SlimDialog);
 
@@ -34,44 +38,53 @@
             UseCases,
             SlimDialog,
         },
+
         data() {
             return {
-                projects: [
-                    {"project": "Project 1", selected: false},
-                    {"project": "Project 2", selected: false},
-                    {"project": "Project 3", selected: false},
-                ],
-            }
+                userId: Number,
+                projects: [{ProjName: String, UseCasesArray: [], Selected: false}],
+            };
         },
+
+        mounted() {
+            this.getProjects();
+        },
+
         methods: {
+
+            async getProjects() {
+                const response = await UserService.fetchProjects({user: this.userId});
+                this.projects = response.data;
+            },
+
             showConfirm(id) {
                 const options = {title: 'Delete Project', okLabel: 'Ok', size: 'sm'};
                 this.$dialogs.confirm('Are you sure you want to delete this project?', options)
-                .then(res => {
-                    if(res.ok === true) {
-                        this.projects.splice(id, 1);
-                    }
-                })
+                    .then((res) => {
+                        if (res.ok === true) {
+                            this.projects.splice(id, 1);
+                        }
+                    });
             },
             showPrompt() {
                 const options = {title: 'New Project', okLabel: 'Add', size: 'sm', prompt: {invalidMessage: ''}};
                 this.$dialogs.prompt('Enter project name:', options)
-                .then(res => {
-                    if(res.ok === true) {
-                        this.projects.push({project: res.value, selected: false});
-                    }
-                })
+                    .then((res) => {
+                        if (res.ok === true) {
+                            this.projects.push({ProjName: res.value, UseCasesArray: [], Selected: false});
+                        }
+                    });
             },
 
             addProject() {
-               this.showPrompt();
+                this.showPrompt();
             },
 
             removeProject(id) {
                 this.showConfirm(id);
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -80,13 +93,13 @@
     @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 
     .flex-container {
-        box-shadow: 0px 0px 10px gray;
+        box-shadow: 0 0 10px gray;
         background: lightcyan;
     }
 
     ul {
         margin: 0;
-        padding-left: 0px;
+        padding-left: 0;
         padding-top: 20px;
         flex-grow: 1;
         list-style-type: none;
@@ -127,7 +140,6 @@
         background-color: lightcoral;
         border-bottom: 5px solid black;
     }
-
 
     p {
         text-align: center;

@@ -6,6 +6,7 @@ import path from "path";
 import errorHandler from "errorhandler";
 import { IndexRoute } from "./routes/index";
 import { AuthRoute } from "./routes/auth";
+import {ProjectsRoute } from "./routes/projects";
 import cors from 'cors';
 
 const options:cors.CorsOptions = {
@@ -106,6 +107,7 @@ export class Server {
 
     IndexRoute.create(router);
     AuthRoute.create(router);
+    ProjectsRoute.create(router);
 
     //use router middleware
     this.app.use(router);

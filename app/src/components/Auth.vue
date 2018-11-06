@@ -23,17 +23,16 @@ export default {
 
   methods: {
     async getUsers() {
-        var response = await UserService.fetchUsers();
+        const response = await UserService.fetchUsers();
         this.users = response.data;
     },
     async login() {
-        var response = await UserService.fetchAuthToken({user: this.selected});
-        
+        const response = await UserService.fetchAuthToken({user: this.selected});
         if (response) {
             this.$root.$emit('userId', this.selected); // emits the user id to the parent app to set the current user
             this.$router.replace({ path: `/user/${this.selected}/dashboard` }); // reroutes to user home page
         } else {
-            console.error('A valid username is required');
+           // console.error('A valid username is required');
       }
     },
   },
