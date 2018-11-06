@@ -21,13 +21,13 @@
 
 <script>
     export default {
-        name: "UseCases",
-        data(){
-            return {
-                usecase: '',
-                usecases: []
-            }
-        },
+            name: "UseCases",
+            data(){
+                return {
+                    usecase: '',
+                    usecases: []
+                }
+            },
 
         methods : {
             addUseCase(){
