@@ -4,9 +4,9 @@
       <router-link v-if="!authenticated" to="/">Home </router-link>
       <router-link v-if="authenticated" to="{path: `/user/${userId}/home`}">Home </router-link>
       <router-link v-if="!authenticated" to='/auth/login'>| Login </router-link>
-      <router-link v-if="authenticated" to='/auth/login' v-on:click.native="logout()" replace>| Logout </router-link>
+      <router-link v-if="authenticated" to='/auth/login' v-on:click.native="logout()">| Logout </router-link>
     </div>
-    <router-view/>
+    <router-view :userId="userId"></router-view>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       authenticated: false,
-      userId: '',
+      userId: Number,
     };
   },
   created() {
@@ -30,11 +30,14 @@ export default {
       this.setUserId(user);
     });
   },
-  mounted() {
-    if (!this.authenticated) {
-      this.$router.replace({ name: 'login' }); //return to login page if no token is present
-    }
-  },
+  watch:{
+      $route(before,after){
+        if (!this.authenticated) {
+            this.$router.replace({ name: 'login' }); //return to login page if no token is present
+        }
+      }
+  }
+    ,
   methods: {
     setUserId(userId) {
       // setter for user id and then proceeds to authenticate
@@ -47,7 +50,7 @@ export default {
     },
     logout() {
       // removes user and resets authenticated status on logout
-      this.user = '';
+      this.userId = '';
       this.authenticated = false;
     },
   },

@@ -32,7 +32,7 @@ export default {
         var response = await UserService.fetchAuthToken({user: this.selected}); //fetch success token from server
         if (response.data.success) {
             this.$root.$emit('userId', this.selected); // emits the user id to the parent app to set the current user
-            this.$router.replace({ path: `/user/${this.selected}/home` }); // rerodutes to user home page
+            this.$router.push({ path: `/user/${this.selected}/home` }); // rerodutes to user home page
         } else {
             console.error('A valid username is required');
       }

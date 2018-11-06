@@ -12,6 +12,6 @@ export default {
   name: 'login',
   components: {
     Auth,
-  },
+  }
 };
 </script>
