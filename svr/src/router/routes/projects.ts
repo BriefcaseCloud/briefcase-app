@@ -38,7 +38,8 @@ export class ProjectsRoute {
      */
     public projectsGet(req: Request, res: Response, next: NextFunction) {
         // Based on user id fetch appropriate projects -- TODO
-        console.log("getting projects...")
+        console.log("getting projects...");
+        // req.body.user
         res
             .status(200)
             .jsonp([

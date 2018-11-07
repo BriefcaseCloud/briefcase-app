@@ -4,9 +4,12 @@ import express from "express";
 import logger from "morgan";
 import path from "path";
 import errorHandler from "errorhandler";
-import { IndexRoute } from "./routes/index";
-import { AuthRoute } from "./routes/auth";
-import {ProjectsRoute } from "./routes/projects";
+import { IndexRoute } from "./router/routes/index";
+import { AuthRoute } from "./router/routes/auth";
+import {ProjectsRoute } from "./router/routes/projects";
+import { Router } from './router'
+import { Storage } from './storage'
+
 import cors from 'cors';
 
 const options:cors.CorsOptions = {
@@ -16,6 +19,7 @@ const options:cors.CorsOptions = {
     origin: "http://localhost:8080",
     preflightContinue: false
 };
+
 
 /**
  * The server.
@@ -51,7 +55,10 @@ export class Server {
     this.config();
 
     //add routes
-    this.routes();
+    Router.init(this.app)
+
+    // add storage
+    Storage.init();
   }
 
   /**
@@ -112,4 +119,5 @@ export class Server {
     //use router middleware
     this.app.use(router);
   }
+
 }
