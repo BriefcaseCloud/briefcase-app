@@ -5,7 +5,7 @@ import {NextFunction, Request, Response, Router} from "express";
  *
  * @class AuthRoute
  */
-export class AuthRoute {
+export class ProjectsRoute {
     /**
      * Create the routes.
      *
@@ -15,15 +15,15 @@ export class AuthRoute {
      */
     public static create(router: Router) {
         //log
-        console.log("[AuthRoute::create] Creating Auth route.");
+        console.log("[ProjectsRoute::create] Creating Projects route.");
 
         //add get ids route
-        router.get("/auth/", (req: Request, res: Response, next: NextFunction) => {
-            new AuthRoute().indexGet(req, res, next);
+        router.get("/projects/", (req: Request, res: Response, next: NextFunction) => {
+            new ProjectsRoute().projectsGet(req, res, next);
         });
         //add verify id route
-        router.post("/auth/", (req: Request, res: Response, next: NextFunction) => {
-            new AuthRoute().indexPost(req, res, next);
+        router.post("/projects/", (req: Request, res: Response, next: NextFunction) => {
+            new ProjectsRoute().projectsPost(req, res, next);
         });
     }
 
@@ -36,10 +36,16 @@ export class AuthRoute {
      * @param res {Response} The express Response object.
      * @param next {NextFunction} Execute the next method.
      */
-    public indexGet(req: Request, res: Response, next: NextFunction) {
+    public projectsGet(req: Request, res: Response, next: NextFunction) {
+        // Based on user id fetch appropriate projects -- TODO
+        console.log("getting projects...");
+        // req.body.user
         res
             .status(200)
-            .jsonp(['Bob', 'Jim', 'Jack', 'Sukdip', 'Big Daddy 69'])
+            .jsonp([
+                {ProjName: "project 1", UseCasesArray: ["click", "2", "3"], Selected: false},
+                {ProjName: "project 2", UseCasesArray: ["1", "2", "3"], Selected: false}
+                ])
             .end();
     }
 
@@ -52,7 +58,9 @@ export class AuthRoute {
      * @param res {Response} The express Response object.
      * @param next {NextFunction} Execute the next method.
      */
-    public indexPost(req: Request, res: Response, next: NextFunction) {
+    public projectsPost(req: Request, res: Response, next: NextFunction) {
+        // add new projects to user db -- TODO
+
         res
             .status(200)
             .jsonp({

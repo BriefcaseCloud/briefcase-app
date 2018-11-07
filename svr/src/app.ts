@@ -4,8 +4,22 @@ import express from "express";
 import logger from "morgan";
 import path from "path";
 import errorHandler from "errorhandler";
+import { IndexRoute } from "./router/routes/index";
+import { AuthRoute } from "./router/routes/auth";
+import {ProjectsRoute } from "./router/routes/projects";
 import { Router } from './router'
 import { Storage } from './storage'
+
+import cors from 'cors';
+
+const options:cors.CorsOptions = {
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    origin: "http://localhost:8080",
+    preflightContinue: false
+};
+
 
 /**
  * The server.
@@ -85,4 +99,25 @@ export class Server {
     this.app.use(errorHandler());
     this.app.use(express.static(path.join(__dirname, "public")));
   }
+
+  /**
+   * Create and return Router.
+   *
+   * @class Server
+   * @method routes
+   * @return void
+   */
+  private routes() {
+    let router: express.Router;
+    router = express.Router();
+    router.use(cors(options));
+
+    IndexRoute.create(router);
+    AuthRoute.create(router);
+    ProjectsRoute.create(router);
+
+    //use router middleware
+    this.app.use(router);
+  }
+
 }
