@@ -36,8 +36,7 @@ export default {
             this.$router.replace({ name: 'login' }); //return to login page if no token is present
         }
       }
-  }
-    ,
+  },
   methods: {
     setUserId(userId) {
       // setter for user id and then proceeds to authenticate
