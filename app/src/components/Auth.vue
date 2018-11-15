@@ -19,22 +19,23 @@ export default {
     };
   },
 
-  created () {
-      this.getUsers(); // runs getUser when page loads.
+  created() {
+      this.getUsers();
   },
 
   methods: {
     async getUsers() {
-        var response = await UserService.fetchUsers(); //fetch user list from server
+
+        const response = await UserService.fetchUsers();
         this.users = response.data;
     },
     async login() {
-        var response = await UserService.fetchAuthToken({user: this.selected}); //fetch success token from server
-        if (response.data.success) {
+        const response = await UserService.fetchAuthToken({user: this.selected});
+        if (response) {
             this.$root.$emit('userId', this.selected); // emits the user id to the parent app to set the current user
-            this.$router.push({ path: `/user/${this.selected}/home` }); // rerodutes to user home page
+            this.$router.replace({ path: `/user/${this.selected}/dashboard` }); // reroutes to user home page
         } else {
-            console.error('A valid username is required');
+           // console.error('A valid username is required');
       }
     },
   },
