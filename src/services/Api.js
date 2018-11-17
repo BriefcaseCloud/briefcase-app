@@ -1,7 +1,10 @@
-import axios from 'axios'
+import axios from "axios";
 
-export default() => {
+export default () => {
   return axios.create({
-    baseURL: `http://localhost:3000`
-  })
-}
+    baseURL:
+      process.env.NODE_ENV === "production"
+        ? "https://briefcase.cloud/api"
+        : `http://localhost:8080`
+  });
+};
