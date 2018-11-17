@@ -5,6 +5,6 @@ export default () => {
     baseURL:
       process.env.NODE_ENV === "production"
         ? "https://briefcase.cloud/api"
-        : `http://localhost:8080/api`
+        : `http://localhost:5000/briefcase-cloud/us-central1/api`
   });
 };
