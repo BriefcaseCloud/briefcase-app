@@ -1,7 +1,7 @@
 <template>
     <div id="dashboard">
         <div id="username">
-            Signed in as {{this.user.userId}}
+            Signed in as {{user.userId}}
         </div>
         <Projects/>
     </div>

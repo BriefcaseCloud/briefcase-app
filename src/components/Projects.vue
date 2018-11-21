@@ -41,7 +41,7 @@
 
         data() {
             return {
-                userId: Number,
+                user:{},
                 projects: [{ProjName: String, UseCasesArray: [], Selected: false}],
             };
         },

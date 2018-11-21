@@ -1,10 +1,10 @@
 <template>
     <div id="app">
         <div id="nav">
-            <router-link v-if="!user.token" :to="{name: 'home'}">Home</router-link>
-            <router-link v-if="user.token" :to="{name:'dashboard'}">Home</router-link> |
-            <router-link v-if="!user.token" :to="{name: 'login'}">Login</router-link>
-            <router-link v-if="user.token" :to="{name: 'login'}" v-on:click.native="logout()">Logout</router-link>
+            <router-link v-if="!user.authenticated" :to="{name: 'home'}">Home</router-link>
+            <router-link v-if="user.authenticated" :to="{name:'dashboard'}">Home</router-link> |
+            <router-link v-if="!user.authenticated" :to="{name: 'login'}">Login</router-link>
+            <router-link v-if="user.authenticated" :to="{name: 'login'}" v-on:click.native="logout()">Logout</router-link>
         </div>
 
         <!--Displays corresponding route-->
@@ -26,13 +26,14 @@
                 user: {
                     userId: String,
                     token: Object,
+                    authenticated: Boolean,
                 }
             };
         },
         created() {
             this.$root.$on('authToken', (authToken) => {
                 // captures the user id emited in auth
-                this.setUserId(authtoken.userId);
+                this.setUserId(authToken.userId);
                 this.setAuthenticated(authToken.token)
             });
         },
@@ -52,11 +53,13 @@
             setAuthenticated(token) {
                 // setter for authenticated
                 this.user.token = token;
+                this.user.authenticated = true;
             },
             logout() {
                 // removes user and resets authenticated status on logout
                 this.user.userId = '';
                 this.user.token = {};
+                this.user.authenticated = false;
             },
         },
     };
