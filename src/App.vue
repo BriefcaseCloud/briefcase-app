@@ -1,20 +1,18 @@
 <template>
-    <div id="app">
-        <div id="nav">
-            <router-link v-if="!authenticated" :to="{name: 'home'}">Home</router-link>
-            <router-link v-if="authenticated" :to="{name:'dashboard'}">Home</router-link> |
-            <router-link v-if="!authenticated" :to="{name: 'login'}">Login</router-link>
-            <router-link v-if="authenticated" :to="{name: 'login'}" v-on:click.native="logout()">Logout</router-link>
-        </div>
-
-        <!--Displays corresponding route-->
-        <router-view/>
-
+  <div id="app">
+    <div id="nav">
+      <router-link v-if="!authenticated" to="/">Home </router-link>
+      <router-link v-if="authenticated" to="{path: `/user/${userId}/home`}">Home </router-link>
+      <router-link v-if="!authenticated" to='/auth/login'>| Login </router-link>
+      <router-link v-if="authenticated" to='/auth/login' v-on:click.native="logout()">| Logout </router-link>
     </div>
+    <router-view :userId="userId"></router-view>
+  </div>
 </template>
 
 <script>
     import Auth from './components/Auth.vue';
+
 
     export default {
         name: 'app',

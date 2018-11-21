@@ -11,18 +11,21 @@
 import UserService from '@/services/UserService';
 export default {
   name: 'Auth',
+
   data() {
     return {
-      users: [],
+      users: [], //user list
       selected: '', // selected user
     };
   },
+
   created() {
       this.getUsers();
   },
 
   methods: {
     async getUsers() {
+
         const response = await UserService.fetchUsers();
         this.users = response.data;
     },
