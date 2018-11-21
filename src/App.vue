@@ -1,18 +1,20 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link v-if="!authenticated" to="/">Home </router-link>
-      <router-link v-if="authenticated" to="{path: `/user/${userId}/home`}">Home </router-link>
-      <router-link v-if="!authenticated" to='/auth/login'>| Login </router-link>
-      <router-link v-if="authenticated" to='/auth/login' v-on:click.native="logout()">| Logout </router-link>
+    <div id="app">
+        <div id="nav">
+            <router-link v-if="!user.token" :to="{name: 'home'}">Home</router-link>
+            <router-link v-if="user.token" :to="{name:'dashboard'}">Home</router-link> |
+            <router-link v-if="!user.token" :to="{name: 'login'}">Login</router-link>
+            <router-link v-if="user.token" :to="{name: 'login'}" v-on:click.native="logout()">Logout</router-link>
+        </div>
+
+        <!--Displays corresponding route-->
+        <router-view :user="user"/>
+
     </div>
-    <router-view :userId="userId"></router-view>
-  </div>
 </template>
 
 <script>
     import Auth from './components/Auth.vue';
-
 
     export default {
         name: 'app',
@@ -21,38 +23,40 @@
         },
         data() {
             return {
-                authenticated: false,
-                userId: String,
+                user: {
+                    userId: String,
+                    token: Object,
+                }
             };
         },
         created() {
-            this.$root.$on('userId', (user) => {
+            this.$root.$on('authToken', (authToken) => {
                 // captures the user id emited in auth
-                this.setUserId(user);
+                this.setUserId(authtoken.userId);
+                this.setAuthenticated(authToken.token)
             });
         },
         mounted() {
-            if (!this.authenticated) {
+            if (!this.user.token) {
                 this.$router.replace({name: 'login'});
             }
         },
         methods: {
             setUserId(userId) {
                 // setter for user id and then proceeds to authenticate
-                this.userId = userId;
-                this.setAuthenticated(true);
+                this.user.userId = userId;
             },
-            getUserId() {
-                return this.userId;
-            },
-            setAuthenticated(status) {
+            // getUserId() {
+            //     return this.userId;
+            // },
+            setAuthenticated(token) {
                 // setter for authenticated
-                this.authenticated = status;
+                this.user.token = token;
             },
             logout() {
                 // removes user and resets authenticated status on logout
-                this.userId = '';
-                this.authenticated = false;
+                this.user.userId = '';
+                this.user.token = {};
             },
         },
     };

@@ -1,7 +1,7 @@
 <template>
     <div id="dashboard">
         <div id="username">
-            Signed in as {{this.userName}}
+            Signed in as {{this.user.userId}}
         </div>
         <Projects/>
     </div>
@@ -19,8 +19,9 @@
         },
 
         props: {
-            userId: Number,
-            userName: String,
+            // userId: Number,
+            // userName: String,
+            user: Object
         },
     };
 </script>
