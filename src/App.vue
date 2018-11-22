@@ -26,7 +26,7 @@
                 user: {
                     userId: String,
                     token: Object,
-                    authenticated: Boolean,
+                    authenticated: false,
                 }
             };
         },
