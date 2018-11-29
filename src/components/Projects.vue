@@ -6,14 +6,14 @@
         </div>
         <ul>
             <li v-for="(data, index) in projects" :key="index">
-                <div class="projectName" v-on:click="data.Selected = !data.Selected">
-                    {{data.ProjName}}
-                    <i class="fa fa-times" v-on:click="removeProject(index), data.selected = !data.selected"> </i>
+                <div class="projectName" v-on:click="selectedIndex = index">
+                    {{data.details.title}}
+                    <i class="fa fa-times" v-on:click="removeProject(index), selectedIndex = ''"> </i>
                 </div>
-                <div class="list" v-show="data.Selected">
+                <div class="list" v-if="index == selectedIndex">
                     <UseCases
                             v-bind:key="index"
-                            v-bind:usecases="data.UseCasesArray"
+                            v-bind:usecases="data.usecases"
                     />
                 </div>
 
@@ -38,11 +38,15 @@
             UseCases,
             SlimDialog,
         },
+        props: {
+            user:{},
+        },
 
         data() {
             return {
-                user:{},
-                projects: [{ProjName: String, UseCasesArray: [], Selected: false}],
+                selectedIndex: String,
+                projects: [],
+                newTitle: String,
             };
         },
 
@@ -53,8 +57,10 @@
         methods: {
 
             async getProjects() {
-                const response = await UserService.fetchProjects({user: this.userId});
-                this.projects = response.data;
+                var params = {uuid: this.user.userId}
+                const response = await UserService.fetchProjects(params);
+                var foundProjects = Array.from(response.data.projects);
+                this.projects = foundProjects
             },
 
             showConfirm(id) {
@@ -71,13 +77,33 @@
                 this.$dialogs.prompt('Enter project name:', options)
                     .then((res) => {
                         if (res.ok === true) {
-                            this.projects.push({ProjName: res.value, UseCasesArray: [], Selected: false});
+                            this.newProject(res.value)
+                                
+                        
                         }
                     });
             },
 
             addProject() {
-                this.showPrompt();
+                this.showPrompt()
+            },
+            newProject(title) {
+                UserService.getNewTemplate()
+                .then(res => {
+                    console.log(title)
+                    var template = res.data.template
+                    template.details.title = title
+                    template.details.owner = this.user.userId
+                    template.details.users.push({permissions: "edit", user: this.user.userId})
+                    this.projects.push(template)
+                    return template
+                })
+                .then(template => {
+                    UserService.createNewProject(template).then(response => {
+                        return response.success
+                    })
+                })
+                
             },
 
             removeProject(id) {

@@ -2,7 +2,7 @@
     <div class="usecases">
         <ul>
             <li v-for="(data, index) in usecases" :key="index">
-                UseCase: {{data}}
+                {{data.name}}
                 <i class="fa fa-minus-circle" v-on:click="removeUseCase(index)"></i>
             </li>
 

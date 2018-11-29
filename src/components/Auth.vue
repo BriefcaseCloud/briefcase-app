@@ -27,6 +27,7 @@ export default {
     async getUsers() {
 
         const response = await UserService.fetchUsers();
+   
         this.users = response.data.usernames;
     },
     async login() {
@@ -34,7 +35,8 @@ export default {
         if (response) {
             var user = {};
             user.token = response.data.token;
-            user.userId = this.selected;
+            user.username = this.selected;
+            user.userId = response.data.id
             this.$root.$emit('authToken', user); // emits the user id to the parent app to set the current user
             this.$router.replace({ path: `/user/${this.selected}/dashboard` }); // reroutes to user home page
         } else {

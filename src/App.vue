@@ -25,27 +25,34 @@
             return {
                 user: {
                     userId: String,
+                    username: String,
                     token: Object,
                     authenticated: false,
                 }
             };
         },
         created() {
+            this.$router.replace({name: 'login'});
             this.$root.$on('authToken', (authToken) => {
                 // captures the user id emited in auth
-                this.setUserId(authToken.userId);
+                this.setUserId(authToken);
                 this.setAuthenticated(authToken.token)
             });
         },
-        mounted() {
-            if (!this.user.token) {
+        watch: {
+            $route(before,after){
+                if (!this.user.authenticated) {
                 this.$router.replace({name: 'login'});
-            }
+                }
+            },
+            
         },
+
         methods: {
-            setUserId(userId) {
+            setUserId(authToken) {
                 // setter for user id and then proceeds to authenticate
-                this.user.userId = userId;
+                this.user.userId = authToken.userId;
+                this.user.username = authToken.username;
             },
             // getUserId() {
             //     return this.userId;
@@ -58,6 +65,7 @@
             logout() {
                 // removes user and resets authenticated status on logout
                 this.user.userId = '';
+                this.user.username = '';
                 this.user.token = {};
                 this.user.authenticated = false;
             },

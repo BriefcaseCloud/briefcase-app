@@ -1,9 +1,9 @@
 <template>
     <div id="dashboard">
         <div id="username">
-            Signed in as {{user.userId}}
+            Signed in as {{user.username}}
         </div>
-        <Projects/>
+        <Projects :user="user"/>
     </div>
 </template>
 
