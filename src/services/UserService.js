@@ -13,6 +13,9 @@ export default {
     createNewProject(project) {
         return Api().post('projects',{project: project})
     },
+    deleteProject(project) {
+        return Api().delete('projects', {puid: project})
+    },
     getNewTemplate() {
         return Api().get('projects/template')
     }

@@ -1,25 +1,42 @@
 <template>
     <div class="flex-container">
-        <div class="addProject" v-on:click="addProject">
-            Add Project
-            <i class="fa fa-plus-circle"> </i>
+        <div class="projectHeader">
+            <div class="projects"> Projects </div>
+            <div class="addProject" v-on:click="addProject">
+                Add
+                <i class="fa fa-plus-circle"> </i>
+            </div>
         </div>
-        <ul>
-            <li v-for="(data, index) in projects" :key="index">
-                <div class="projectName" v-on:click="selectedIndex = index">
-                    {{data.details.title}}
-                    <i class="fa fa-times" v-on:click="removeProject(index), selectedIndex = ''"> </i>
-                </div>
-                <div class="list" v-if="index == selectedIndex">
-                    <UseCases
-                            v-bind:key="index"
-                            v-bind:usecases="data.usecases"
+        <div class = "projectsPanel">
+
+
+            <div class = "projectListPanel">
+
+                <ul class = "projectList">
+                    <li v-for="(data, index) in projects" :key="index">
+                        <div class="projectName" v-on:click="selectedIndex = index">
+                            {{data.details.title}}
+                            <i class="fa fa-times" v-on:click="removeProject(index), selectedIndex = null"> </i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="useCaseListPanel">
+                <div v-if="selectedIndex != null">
+                    <div class="selectedProjectName">
+                        <b>{{projects[selectedIndex].details.title}}</b>: Use Cases
+                    </div>
+                    <UseCases class="useCaseList"
+                            v-bind:key="selectedIndex"
+                            v-bind:useCases="projects[selectedIndex].useCases"
                     />
                 </div>
+                <div v-else>
+                    No Project Selected...
+                </div>
+            </div>
+        </div>
 
-
-            </li>
-        </ul>
     </div>
 </template>
 
@@ -44,7 +61,7 @@
 
         data() {
             return {
-                selectedIndex: String,
+                selectedIndex: null,
                 projects: [],
                 newTitle: String,
             };
@@ -63,13 +80,14 @@
                 this.projects = foundProjects
             },
 
-            showConfirm(id) {
+            showConfirm() {
                 const options = {title: 'Delete Project', okLabel: 'Ok', size: 'sm'};
                 this.$dialogs.confirm('Are you sure you want to delete this project?', options)
                     .then((res) => {
                         if (res.ok === true) {
-                            this.projects.splice(id, 1);
+                            return true;
                         }
+                        return false;
                     });
             },
             showPrompt() {
@@ -87,27 +105,35 @@
             addProject() {
                 this.showPrompt()
             },
+
             newProject(title) {
                 UserService.getNewTemplate()
                 .then(res => {
-                    console.log(title)
-                    var template = res.data.template
-                    template.details.title = title
-                    template.details.owner = this.user.userId
-                    template.details.users.push({permissions: "edit", user: this.user.userId})
-                    this.projects.push(template)
-                    return template
+                    console.log(title);
+                    var template = res.data.template;
+                    template.details.title = title;;
+                    template.details.owner = this.user.userId;
+                    template.details.users.push({permissions: "edit", user: this.user.userId});
+                    this.projects.push(template);
+                    return template;
                 })
                 .then(template => {
                     UserService.createNewProject(template).then(response => {
-                        return response.success
+                        return response.success;
                     })
                 })
-                
             },
 
             removeProject(id) {
-                this.showConfirm(id);
+                if(this.user.userId === this.projects[id].details.owner) {
+                        console.log("tryna delete");
+                        console.log(this.projects[id].details.puid);
+                        UserService.deleteProject(this.projects[id].details.puid);
+
+                } else {
+                    //Not the owner
+                }
+
             },
         },
     };
@@ -123,48 +149,89 @@
         background: lightcyan;
     }
 
-    ul {
-        margin: 0;
-        padding-left: 0;
-        padding-top: 20px;
-        flex-grow: 1;
-        list-style-type: none;
+    .projectHeader {
+        display: flex;
+        background-color: #89c4f4;
+        border-bottom: 5px solid slategray;
     }
 
-    ul li {
-        padding-bottom: 20px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .projectName {
-        text-align: left;
+    .projects {
+        flex-grow: 3;
         padding: 20px;
+        text-align: left;
         font-size: 1.3em;
-        background-color: azure;
-        border-bottom: 5px solid lightsteelblue;
-        cursor: pointer;
-        color: black;
-    }
-
-    .projectName:hover {
-        background-color: aliceblue;
-        border-bottom: 5px solid steelblue;
-
     }
 
     .addProject {
+        flex-grow: 1;
         padding: 20px;
         font-size: 1.3em;
         background-color: lightpink;
-        border-bottom: 5px solid slategray;
         cursor: pointer;
         color: black;
     }
 
     .addProject:hover {
         background-color: lightcoral;
-        border-bottom: 5px solid black;
+    }
+
+
+    .projectsPanel {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .useCaseListPanel {
+        width: 60%;
+    }
+
+    .useCaseList {
+        overflow-y: auto;
+    }
+
+    .projectListPanel {
+        width: 40%;
+        border-right: 3px solid darkgray;
+    }
+
+    .projectList {
+        overflow-y: auto;
+        padding: 0px;
+        border-left: 5px solid black
+    }
+
+    .selectedProjectName {
+        padding: 20px;
+        text-align: left;
+        font-size: 1.3em;
+        background-color: steelblue;
+        color: black;
+    }
+
+
+    .projectName {
+        padding: 20px;
+        text-align: left;
+        font-size: 1.1em;
+        background-color: azure;
+        border-bottom: 1px solid lightsteelblue;
+        cursor: pointer;
+        color: black;
+    }
+
+    .projectName:hover {
+        background-color: aliceblue;
+        border-bottom: 1px solid steelblue;
+
+    }
+
+
+
+    ul {
+        margin: 0;
+        padding-left: 0;
+        flex-grow: 1;
+        list-style-type: none;
     }
 
     p {
@@ -179,6 +246,28 @@
 
     i {
         float: right;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 50%;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
     }
 
 

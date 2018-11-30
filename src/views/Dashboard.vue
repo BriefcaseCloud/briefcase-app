@@ -1,7 +1,7 @@
 <template>
     <div id="dashboard">
         <div id="username">
-            Signed in as {{user.username}}
+            <h1>Signed in as {{user.username}}</h1>
         </div>
         <Projects :user="user"/>
     </div>
@@ -37,6 +37,5 @@
 
     #username {
         text-align: left;
-        padding-bottom: 10%;
     }
 </style>
