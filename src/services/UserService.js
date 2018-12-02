@@ -14,9 +14,12 @@ export default {
         return Api().post('projects',{project: project})
     },
     deleteProject(project) {
-        return Api().delete('projects', {puid: project})
+        return Api().delete('projects',{data: {puid: `${project}`}})
     },
     getNewTemplate() {
         return Api().get('projects/template')
+    },
+    updateProject() {
+        return Api().put('projects',{project: project})
     }
 }

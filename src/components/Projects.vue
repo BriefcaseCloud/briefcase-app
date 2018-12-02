@@ -16,7 +16,7 @@
                     <li v-for="(data, index) in projects" :key="index">
                         <div class="projectName" v-on:click="selectedIndex = index">
                             {{data.details.title}}
-                            <i class="fa fa-times" v-on:click="removeProject(index), selectedIndex = null"> </i>
+                            <i class="fa fa-times" v-on:click="removeProject(index)"> </i>
                         </div>
                     </li>
                 </ul>
@@ -28,7 +28,7 @@
                     </div>
                     <UseCases class="useCaseList"
                             v-bind:key="selectedIndex"
-                            v-bind:useCases="projects[selectedIndex].useCases"
+                            v-bind:useCases="projects[selectedIndex].usecases"
                     />
                 </div>
                 <div v-else>
@@ -64,27 +64,43 @@
                 selectedIndex: null,
                 projects: [],
                 newTitle: String,
+                detailsTemp: {},
+                usecaseTemp: Object,
+                unsaved: []
             };
         },
 
         mounted() {
             this.getProjects();
+            this.getTemplate();
+
         },
 
         methods: {
+            getTemplate() {
+                UserService.getNewTemplate()
+                .then(res => {
+                    this.detailsTemp = res.data.template.details
+                    this.usecaseTemp = res.data.template.usecases
+                })
+            },
 
-            async getProjects() {
+
+            getProjects() {
                 var params = {uuid: this.user.userId}
-                const response = await UserService.fetchProjects(params);
-                var foundProjects = Array.from(response.data.projects);
-                this.projects = foundProjects
+                UserService.fetchProjects(params)
+                .then(res => {
+                    var foundProjects = Array.from(res.data.projects);
+                    this.projects = foundProjects
+                    // return this.projects
+                })  
             },
 
             showConfirm() {
                 const options = {title: 'Delete Project', okLabel: 'Ok', size: 'sm'};
                 this.$dialogs.confirm('Are you sure you want to delete this project?', options)
                     .then((res) => {
-                        if (res.ok === true) {
+                        if (res.ok) {
                             return true;
                         }
                         return false;
@@ -94,10 +110,8 @@
                 const options = {title: 'New Project', okLabel: 'Add', size: 'sm', prompt: {invalidMessage: ''}};
                 this.$dialogs.prompt('Enter project name:', options)
                     .then((res) => {
-                        if (res.ok === true) {
+                        if (res.ok) {
                             this.newProject(res.value)
-                                
-                        
                         }
                     });
             },
@@ -107,34 +121,43 @@
             },
 
             newProject(title) {
-                UserService.getNewTemplate()
+                console.log(title)
+                var newdetails = Object.assign({},this.detailsTemp);
+                newdetails.title = title;
+                newdetails.owner = this.user.userId;
+                newdetails.users.push({permissions: "edit", user: this.user.userId});
+                return UserService.createNewProject({details: newdetails, usecases: []})
                 .then(res => {
-                    console.log(title);
-                    var template = res.data.template;
-                    template.details.title = title;;
-                    template.details.owner = this.user.userId;
-                    template.details.users.push({permissions: "edit", user: this.user.userId});
-                    this.projects.push(template);
-                    return template;
-                })
-                .then(template => {
-                    UserService.createNewProject(template).then(response => {
-                        return response.success;
-                    })
+                    if (res.status === 200) {
+                        newdetails.puid = res.data.puid
+                        this.projects.push({details: newdetails, usecases: []});
+                    }
                 })
             },
 
-            removeProject(id) {
+            async removeProject(id) {
                 if(this.user.userId === this.projects[id].details.owner) {
-                        console.log("tryna delete");
-                        console.log(this.projects[id].details.puid);
-                        UserService.deleteProject(this.projects[id].details.puid);
-
+                    console.log("tryna delete");
+                    console.log(this.projects[id].details.puid);
+                    return UserService.deleteProject(this.projects[id].details.puid)
+                    .then(res => {
+                        console.log(res)
+                        if (res.status === 200) {
+                            this.projects.splice(id,1);
+                            this.selectedIndex = null
+                        }
+                    })
                 } else {
                     //Not the owner
                 }
 
             },
+            async saveProject(id) {
+                return UserService.updateProject(this.projects[id])
+                .then(() => {
+                    this.unsaved.splice(id,1);
+                })
+            }
         },
     };
 </script>
