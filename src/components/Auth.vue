@@ -31,7 +31,7 @@ export default {
         this.users = response.data.usernames;
     },
     async login() {
-        const response = await UserService.fetchAuthToken({username: this.selected, password: "password"});
+        const response = await UserService.fetchAuthToken(this.selected);
         if (response) {
             var user = {};
             user.token = response.data.token;

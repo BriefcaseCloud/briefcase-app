@@ -28,7 +28,8 @@
                     </div>
                     <UseCases class="useCaseList"
                             v-bind:key="selectedIndex"
-                            v-bind:useCases="projects[selectedIndex].usecases"
+                            v-bind:usecases="projects[selectedIndex].usecases"
+                            v-bind:puid="projects[selectedIndex].puid"
                     />
                 </div>
                 <div v-else>
@@ -66,7 +67,8 @@
                 newTitle: String,
                 detailsTemp: {},
                 usecaseTemp: Object,
-                unsaved: []
+                unsavedProjects: [],
+                usersToShare: []
             };
         },
 
@@ -85,10 +87,8 @@
                 })
             },
 
-
             getProjects() {
-                var params = {uuid: this.user.userId}
-                UserService.fetchProjects(params)
+                UserService.fetchProjects(this.user.userId)
                 .then(res => {
                     var foundProjects = Array.from(res.data.projects);
                     this.projects = foundProjects
@@ -106,6 +106,7 @@
                         return false;
                     });
             },
+
             showPrompt() {
                 const options = {title: 'New Project', okLabel: 'Add', size: 'sm', prompt: {invalidMessage: ''}};
                 this.$dialogs.prompt('Enter project name:', options)
@@ -121,7 +122,6 @@
             },
 
             newProject(title) {
-                console.log(title)
                 var newdetails = Object.assign({},this.detailsTemp);
                 newdetails.title = title;
                 newdetails.owner = this.user.userId;
@@ -135,27 +135,33 @@
                 })
             },
 
-            async removeProject(id) {
+            removeProject(id) {
                 if(this.user.userId === this.projects[id].details.owner) {
-                    console.log("tryna delete");
-                    console.log(this.projects[id].details.puid);
                     return UserService.deleteProject(this.projects[id].details.puid)
                     .then(res => {
-                        console.log(res)
                         if (res.status === 200) {
                             this.projects.splice(id,1);
                             this.selectedIndex = null
                         }
                     })
                 } else {
-                    //Not the owner
+                    //Not the owner, prompt?
                 }
-
             },
-            async saveProject(id) {
+
+            saveProject(id) {
                 return UserService.updateProject(this.projects[id])
                 .then(() => {
-                    this.unsaved.splice(id,1);
+                    this.unsavedProjects.splice(id,1);
+                })
+            },
+
+            shareWithUsers(){
+                return UserService.shareProject(this.usersToShare)
+                .then(res => {
+                    if(res.status === 200){
+                        this.usersToShare = [];
+                    }
                 })
             }
         },

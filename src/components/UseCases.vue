@@ -1,9 +1,9 @@
 <template>
     <div class="usecases">
         <ul>
-            <li v-for="(data, index) in useCases" :key="index">
+            <li v-for="(data, index) in usecases" :key="index">
                 <div class = useCaseName>
-                    {{data.name}}
+                    {{data}}
                 </div>
                 <div class="useCaseIcons">
                     <i class="fa fa-minus-circle" v-on:click="removeUseCase(index)"></i>
@@ -14,7 +14,7 @@
 
             <li>
                 <form @submit.prevent="addUseCase">
-                    <input type="text" placeholder="Add usecase..." v-model="useCase"/>
+                    <input type="text" placeholder="Add usecase..." v-model="usecase"/>
                 </form>
             </li>
         </ul>
@@ -23,16 +23,19 @@
 
 
 <script>
+    import UserService from '../services/UserService';
+
     export default {
         name: 'UseCases',
 
         props: {
-            useCases: Array,
+            puid: String,
+            usecases: Array,
         },
 
         data() {
             return {
-                useCase: '',
+                usecase: '',
             };
         },
 
@@ -41,9 +44,18 @@
             addUseCase() {
                 //Get template
                 //Fill template
-                //Post
                 this.usecases.push(this.usecase);
-                this.usecase = '';
+                this.usecase = '';    
+
+                //Post
+                // UserService.createNewProject(this.usecase,this.puid)
+                // .then(res => {
+                //     if(res.status === 200){
+                //         this.usecase.ucid = res.data.ucid;
+                //         this.usecases.push(this.usecase);
+                //         this.usecase = '';
+                //     }
+                // })
             },
 
             editUseCase(id) {
@@ -52,6 +64,12 @@
 
             removeUseCase(id) {
                 this.usecases.splice(id, 1);
+                // UserService.deleteUseCase(this.usecases[id].ucid,this.puid)
+                // .then(res => {
+                //     if(res.status === 200) {
+                //         this.usecases.splice(id, 1);
+                //     }
+                // }); 
             },
         },
     };
