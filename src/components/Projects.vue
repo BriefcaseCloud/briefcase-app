@@ -23,6 +23,7 @@
 
         <div class="usecaseListPanel">
             <UseCases
+                v-on:share-project="shareProject()"
                 v-bind:projects="projects"
                 v-bind:selectedProject="selectedIndex"
             />
@@ -131,6 +132,10 @@
                     .then(() => {
                         return true
                     })
+            },
+
+            shareProject() {
+                alert("share with users");
             },
 
             shareWithUsers(id) {

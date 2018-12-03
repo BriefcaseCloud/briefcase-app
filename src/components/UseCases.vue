@@ -9,9 +9,15 @@
                     <b>No Project Selected...</b>
                 </div>
             </div>
-            <div class="addUsecase" v-on:click="addNewUsecase()">
-                <i class="add fa fa-plus-circle"> </i>
+            <div class="addAndShare">
+                <div class="addUsecase" v-on:click="addNewUsecase()">
+                    <i class="add fa fa-plus-circle"> </i>
+                </div>
+                <div class="shareProject" v-on:click="$emit('share-project')">
+                    <i class="add fa fa-share"> </i>
+                </div>
             </div>
+
         </div>
 
         <div class="usecases">
@@ -32,8 +38,6 @@
             </ul>
         </div>
     </div>
-
-
 </template>
 
 
@@ -120,6 +124,11 @@
         border-radius: 10px;
     }
 
+    .addAndShare {
+        display: flex;
+        flex-direction: row;
+    }
+
     .usecaseIcons {
         flex-grow: 1;
     }
@@ -153,9 +162,19 @@
     }
 
     .addUsecase {
+        flex-grow: 1;
         padding: 10px;
         font-size: 1.3em;
         background-color: lightpink;
+        cursor: pointer;
+        color: black;
+    }
+
+    .shareProject {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: 1.3em;
+        background-color: lightblue;
         cursor: pointer;
         color: black;
     }
