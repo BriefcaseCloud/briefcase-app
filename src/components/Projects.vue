@@ -4,8 +4,8 @@
             <div class="projectHeader">
                 <div class="projects"> Projects
                 </div>
-                <div class="addProject" v-on:click="addProject">
-                    <i class="add fa fa-plus-circle"> </i>
+                <div class="projectSearch">
+                    <input type="text" v-model="search" placeholder="Search projects.."/>
                 </div>
             </div>
 
@@ -18,6 +18,9 @@
                         </div>
                     </li>
                 </ul>
+            </div>
+            <div class="addProject" v-on:click="addProject">
+                <i class="add fa fa-plus-circle"> </i>
             </div>
         </div>
 
@@ -182,12 +185,23 @@
         border-radius: 10px;
     }
 
-    .addProject {
+    .projectSearch {
+        color: black;
+        cursor: pointer;
         padding: 10px;
+        border-radius: 10px;
+    }
+
+    .addProject {
         font-size: 1.3em;
         background-color: lightpink;
         color: black;
         cursor: pointer;
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid #222f3e;
+        cursor: pointer;
+        color: black;
     }
 
     .addProject:hover {
