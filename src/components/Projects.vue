@@ -142,7 +142,7 @@
                 return UserService.shareProject(this.projects[id].details.puid,this.usersToShare)
                     .then(res => {
                         if (res.status === 200) {
-                            return true
+                            return true;
                         }
                     })
             },
@@ -201,9 +201,6 @@
     .usecaseListPanel {
         width: 65%;
         height: 100%;
-        border: 2px solid #222f3e;
-        border-radius: 10px;
-        overflow: hidden;
     }
 
     .projectListPanel {
