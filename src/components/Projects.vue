@@ -106,6 +106,7 @@
                     var project = res.data.project
                     project.title = title
                     project.usecases = []
+                    console.log(project)
                     UserService.updateProject(project)
                     .then(res => {
                         if(res.status === 200){

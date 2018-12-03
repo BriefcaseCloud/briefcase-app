@@ -37,8 +37,10 @@ export default {
             user.token = response.data.token;
             user.username = this.selected;
             user.userId = response.data.id
+            console.log(response.data.isAdmin)
+            user.isAdmin = response.data.isAdmin
             this.$root.$emit('authToken', user); // emits the user id to the parent app to set the current user
-            this.$router.replace({ path: `/user/${this.selected}/dashboard` }); // reroutes to user home page
+            this.$router.replace({ path: `/user/${user.userId}/dashboard` }); // reroutes to user home page
         } else {
            // console.error('A valid username is required');
       }

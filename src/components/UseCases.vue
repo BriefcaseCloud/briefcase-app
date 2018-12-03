@@ -72,12 +72,12 @@
         },
 
         methods: {
-            addNewUsecase(id,name) {
-                return UserService.createNewUseCase(this.projects[id].details.puid)
+            addNewUsecase() {
+                return UserService.createNewUseCase(this.selectedProject.puid)
                 .then(res => {
-                    var usecase = res.data.usecase;
-                    usecase.name = name;
-                    this.projects[id].usecases.push(usecase)
+                    var usecase = res.data;
+                    usecase.name = 'default';
+                    this.projects[this.selectedProject].usecases.push(usecase)
                     return true
                 })
 

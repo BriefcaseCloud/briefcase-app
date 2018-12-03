@@ -29,6 +29,7 @@
                     username: String,
                     token: Object,
                     authenticated: false,
+                    isAdmin: false
                 }
             };
         },

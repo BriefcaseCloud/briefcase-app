@@ -17,19 +17,19 @@ export default {
         return Api().delete(`projects/${project}`)
     },
     updateProject(project) {
-        return Api().put(`projects/${project.puid}`,{project: project})
+        return Api().put(`projects/${project.puid}`,project)
     },
     createNewUseCase(puid) {
         return Api().post(`projects/${puid}/usecases`)
     },
     updateUseCase(puid,ucid,usecase){
-        return Api().put(`projects/${puid}/usecases/${ucid}`,{usecase: usecase})
+        return Api().put(`projects/${puid}/usecases/${ucid}`,usecase)
     },
     deleteUseCase(ucid,puid) {
         return Api().delete(`projects/${puid}/usecases/${ucid}`)
     },
     shareProject(puid,users) {
-        return Api().post(`projects/${puid}/share`,{users: users})
+        return Api().post(`projects/${puid}/share`,users)
     }
 
 }
