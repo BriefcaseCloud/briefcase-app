@@ -55,8 +55,6 @@
                 selectedIndex: null,
                 projects: [],
                 newTitle: String,
-                detailsTemp: {},
-                usecaseTemp: Object,
                 unsavedProjects: [],
                 usersToShare: []
             };
@@ -64,19 +62,10 @@
 
         mounted() {
             this.getProjects();
-            this.getTemplate();
 
         },
 
         methods: {
-            getTemplate() {
-                UserService.getNewTemplate()
-                    .then(res => {
-                        this.detailsTemp = res.data.template.details
-                        this.usecaseTemp = res.data.template.usecases
-                    })
-            },
-
             getProjects() {
                 UserService.fetchProjects(this.user.userId)
                     .then(res => {
@@ -112,17 +101,13 @@
             },
 
             newProject(title) {
-                var newdetails = Object.assign({}, this.detailsTemp);
-                newdetails.title = title;
-                newdetails.owner = this.user.userId;
-                newdetails.users.push({permissions: "edit", user: this.user.userId});
-                return UserService.createNewProject({details: newdetails, usecases: []})
-                    .then(res => {
-                        if (res.status === 200) {
-                            newdetails.puid = res.data.puid
-                            this.projects.push({details: newdetails, usecases: []});
-                        }
-                    })
+                UserService.createNewProject(this.user.uuid)
+                .then(res => {
+                    var project = res.data.project
+                    project.title = title
+                    project.usecases = []
+                    this.projects.push(project)
+                })
             },
 
             async removeProject(id) {
@@ -136,7 +121,6 @@
                                 }
                             });
                     }
-
                 } else {
                     //Not the owner, prompt?
                 }
@@ -145,15 +129,15 @@
             saveProject(id) {
                 return UserService.updateProject(this.projects[id])
                     .then(() => {
-                        this.unsavedProjects.splice(id, 1);
+                        return true
                     })
             },
 
-            shareWithUsers() {
-                return UserService.shareProject(this.usersToShare)
+            shareWithUsers(id) {
+                return UserService.shareProject(this.projects[id].details.puid,this.usersToShare)
                     .then(res => {
                         if (res.status === 200) {
-                            this.usersToShare = [];
+                            return true
                         }
                     })
             },

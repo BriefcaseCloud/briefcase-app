@@ -66,23 +66,32 @@
                 }
             },
 
-            addUsecase() {
-                const puid = this.projects[this.selectedProject].details.puid;
-                UserService.createNewUseCase(this.defaultUsecase, puid);
+            addNewUsecase(id,name) {
+                return UserService.createNewUseCase(this.projects[id].details.puid)
+                .then(res => {
+                    var usecase = res.data.usecase;
+                    usecase.name = name;
+                    this.projects[id].usecases.push(usecase)
+                    return true
+                })
             },
 
-            editUsecase(id) {
-
+            saveUsecase(id) {
+                UserService.updateUseCase(this.puid,this.usecases[id].ucid,this.usecases[id])
+                .then(res => {
+                    if(res.status === 200) {
+                        return true
+                    }
+                })
             },
 
             removeUsecase(id) {
-                this.usecases.splice(id, 1);
-                // UserService.deleteUseCase(this.usecases[id].ucid,this.puid)
-                // .then(res => {
-                //     if(res.status === 200) {
-                //         this.usecases.splice(id, 1);
-                //     }
-                // }); 
+                UserService.deleteUseCase(this.usecases[id].ucid,this.puid)
+                .then(res => {
+                    if(res.status === 200) {
+                        this.usecases.splice(id, 1);
+                    }
+                }); 
             },
 
             showUsecaseDetails() {
