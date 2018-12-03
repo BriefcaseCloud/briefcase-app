@@ -63,7 +63,8 @@
                 projects: [],
                 newTitle: String,
                 unsavedProjects: [],
-                usersToShare: []
+                usersToShare: [],
+                search: 'Search Projects...'
             };
         },
 
