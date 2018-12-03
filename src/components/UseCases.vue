@@ -1,24 +1,35 @@
 <template>
-    <div class="usecases">
-        <ul>
-            <li v-for="(data, index) in usecases" :key="index">
-                <div class = useCaseName>
-                    {{data}}
+    <div class="usecasePanel">
+        <div class = "usecaseHeader">
+            <div class="selectedProjectName">
+                <div v-if="selectedProject != null">
+                    <b>{{projects[selectedProject].details.title}}</b>
                 </div>
-                <div class="useCaseIcons">
-                    <i class="fa fa-minus-circle" v-on:click="removeUseCase(index)"></i>
-                    <i class="fa fa-edit" v-on:click="editUseCase(index)"></i>
+                <div v-else>
+                    <b>No Project Selected...</b>
                 </div>
+            </div>
+            <div class = "addUsecase" v-on:click="addUsecase()">
+                <i class="add fa fa-plus-circle"> </i>
+            </div>
+        </div>
 
-            </li>
-
-            <li>
-                <form @submit.prevent="addUseCase">
-                    <input type="text" placeholder="Add usecase..." v-model="usecase"/>
-                </form>
-            </li>
-        </ul>
+        <div v-if="selectedProject != null" class="usecases">
+            <ul>
+                <li v-for="(data, index) in usecases" :key="index">
+                    <div class = usecaseName v-on:click="showUsecaseDetails()">
+                        {{data.name}}
+                    </div>
+                    <div class="usecaseIcons">
+                        <i class="edit fa fa-minus-circle" v-on:click="removeUseCase(index)"></i>
+                        <i class="remove fa fa-edit" v-on:click="editUseCase(index)"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
+
+
 </template>
 
 
@@ -29,40 +40,42 @@
         name: 'UseCases',
 
         props: {
-            puid: String,
+            projects: Array,
             usecases: Array,
+            selectedProject: null,
+            selectedUsecase: null,
         },
 
         data() {
             return {
-                usecase: '',
+                defaultUsecase: {
+                    name: "default",
+                },
             };
+        },
+
+        mounted() {
+            this.dispUsecases();
         },
 
         methods: {
 
-            addUseCase() {
-                //Get template
-                //Fill template
-                this.usecases.push(this.usecase);
-                this.usecase = '';    
-
-                //Post
-                // UserService.createNewProject(this.usecase,this.puid)
-                // .then(res => {
-                //     if(res.status === 200){
-                //         this.usecase.ucid = res.data.ucid;
-                //         this.usecases.push(this.usecase);
-                //         this.usecase = '';
-                //     }
-                // })
+            dispUsecases() {
+                if(this.selectedProject != null) {
+                    this.usecases = this.projects[this.selectedProject].usecases;
+                }
             },
 
-            editUseCase(id) {
+            addUsecase() {
+                const puid = this.projects[this.selectedProject].details.puid;
+                UserService.createNewUseCase(this.defaultUsecase, puid);
+            },
+
+            editUsecase(id) {
 
             },
 
-            removeUseCase(id) {
+            removeUsecase(id) {
                 this.usecases.splice(id, 1);
                 // UserService.deleteUseCase(this.usecases[id].ucid,this.puid)
                 // .then(res => {
@@ -71,6 +84,11 @@
                 //     }
                 // }); 
             },
+
+            showUsecaseDetails() {
+                alert("show uc deets");
+
+            }
         },
     };
 </script>
@@ -79,13 +97,33 @@
     @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
     @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 
-    .useCaseIcons {
+    .usecaseIcons {
         flex-grow: 1;
     }
 
-    .useCaseName {
+    .usecaseName {
         flex-grow: 8;
     }
+
+    .addUsecase {
+        padding: 10px;
+        font-size: 1.3em;
+        background-color: lightpink;
+        cursor: pointer;
+        color: black;
+    }
+
+    .addUsecase:hover {
+        background-color: lightcoral;
+    }
+
+    .selectedProjectName {
+        padding: 20px;
+        text-align: left;
+        font-size: 1.3em;
+        color: black;
+    }
+
 
     ul {
         margin: 0;
@@ -113,7 +151,7 @@
         outline: none;
     }
 
-    i {
+    i.edit, i.remove {
         float: right;
         padding: 5px;
     }

@@ -1,10 +1,11 @@
 <template>
     <div id="app">
         <div id="nav">
-            <router-link v-if="!user.authenticated" :to="{name: 'home'}">Home</router-link>
-            <router-link v-if="user.authenticated" :to="{name:'dashboard'}">Home</router-link> |
-            <router-link v-if="!user.authenticated" :to="{name: 'login'}">Login</router-link>
-            <router-link v-if="user.authenticated" :to="{name: 'login'}" v-on:click.native="logout()">Logout</router-link>
+            <router-link v-if="user.authenticated" :to="{name: 'login'}" v-on:click.native="logout()">
+                <div class="logout">
+                    Logout
+                </div>
+            </router-link>
         </div>
 
         <!--Displays corresponding route-->
@@ -87,17 +88,22 @@
         color: #2c3e50;
     }
 
-    #nav {
-        padding: 30px;
+    a {
+        text-decoration: none;
     }
 
-    #nav a {
-        font-weight: bold;
-        color: #2c3e50;
-    }
-
-    #nav a.router-link-exact-active {
-        color: #42b983;
+    .logout {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 10px;
+        width: 5%;
+        text-align: left;
+        font-size: 1.1em;
+        border: 1px solid #222f3e;
+        cursor: pointer;
+        color: black;
+        background-color: lightpink;
     }
 
 </style>

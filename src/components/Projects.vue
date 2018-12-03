@@ -1,19 +1,17 @@
 <template>
     <div class="flex-container">
-        <div class="projectHeader">
-            <div class="projects"> Projects </div>
-            <div class="addProject" v-on:click="addProject">
-                Add
-                <i class="fa fa-plus-circle"> </i>
+        <div class="projectPanel">
+            <div class="projectHeader">
+                <div class="projects"> Projects
+                </div>
+                <div class="addProject" v-on:click="addProject">
+                    <i class="add fa fa-plus-circle"> </i>
+                </div>
             </div>
-        </div>
-        <div class = "projectsPanel">
 
-
-            <div class = "projectListPanel">
-
-                <ul class = "projectList">
-                    <li v-for="(data, index) in projects" :key="index">
+            <div class="projectListPanel">
+                <ul>
+                    <li class="projectList" v-for="(data, index) in projects" :key="index">
                         <div class="projectName" v-on:click="selectedIndex = index">
                             {{data.details.title}}
                             <i class="fa fa-times" v-on:click="removeProject(index)"> </i>
@@ -21,24 +19,16 @@
                     </li>
                 </ul>
             </div>
-            <div class="useCaseListPanel">
-                <div v-if="selectedIndex != null">
-                    <div class="selectedProjectName">
-                        <b>{{projects[selectedIndex].details.title}}</b>: Use Cases
-                    </div>
-                    <UseCases class="useCaseList"
-                            v-bind:key="selectedIndex"
-                            v-bind:usecases="projects[selectedIndex].usecases"
-                            v-bind:puid="projects[selectedIndex].puid"
-                    />
-                </div>
-                <div v-else>
-                    No Project Selected...
-                </div>
-            </div>
         </div>
 
+        <div class="usecaseListPanel">
+            <UseCases
+                v-bind:projects="projects"
+                v-bind:selectedProject="selectedIndex"
+            />
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -57,7 +47,7 @@
             SlimDialog,
         },
         props: {
-            user:{},
+            user: {},
         },
 
         data() {
@@ -81,24 +71,24 @@
         methods: {
             getTemplate() {
                 UserService.getNewTemplate()
-                .then(res => {
-                    this.detailsTemp = res.data.template.details
-                    this.usecaseTemp = res.data.template.usecases
-                })
+                    .then(res => {
+                        this.detailsTemp = res.data.template.details
+                        this.usecaseTemp = res.data.template.usecases
+                    })
             },
 
             getProjects() {
                 UserService.fetchProjects(this.user.userId)
-                .then(res => {
-                    var foundProjects = Array.from(res.data.projects);
-                    this.projects = foundProjects
-                    // return this.projects
-                })  
+                    .then(res => {
+                        var foundProjects = Array.from(res.data.projects);
+                        this.projects = foundProjects
+                        // return this.projects
+                    })
             },
 
             showConfirm() {
                 const options = {title: 'Delete Project', okLabel: 'Ok', size: 'sm'};
-                this.$dialogs.confirm('Are you sure you want to delete this project?', options)
+                return this.$dialogs.confirm('Are you sure you want to delete this project?', options)
                     .then((res) => {
                         if (res.ok) {
                             return true;
@@ -122,28 +112,31 @@
             },
 
             newProject(title) {
-                var newdetails = Object.assign({},this.detailsTemp);
+                var newdetails = Object.assign({}, this.detailsTemp);
                 newdetails.title = title;
                 newdetails.owner = this.user.userId;
                 newdetails.users.push({permissions: "edit", user: this.user.userId});
                 return UserService.createNewProject({details: newdetails, usecases: []})
-                .then(res => {
-                    if (res.status === 200) {
-                        newdetails.puid = res.data.puid
-                        this.projects.push({details: newdetails, usecases: []});
-                    }
-                })
-            },
-
-            removeProject(id) {
-                if(this.user.userId === this.projects[id].details.owner) {
-                    return UserService.deleteProject(this.projects[id].details.puid)
                     .then(res => {
                         if (res.status === 200) {
-                            this.projects.splice(id,1);
-                            this.selectedIndex = null
+                            newdetails.puid = res.data.puid
+                            this.projects.push({details: newdetails, usecases: []});
                         }
                     })
+            },
+
+            async removeProject(id) {
+                if (this.user.userId === this.projects[id].details.owner) {
+                    if (await this.showConfirm()) {
+                        return UserService.deleteProject(this.projects[id].details.puid)
+                            .then(res => {
+                                if (res.status === 200) {
+                                    this.projects.splice(id, 1);
+                                    this.selectedIndex = null
+                                }
+                            });
+                    }
+
                 } else {
                     //Not the owner, prompt?
                 }
@@ -151,19 +144,19 @@
 
             saveProject(id) {
                 return UserService.updateProject(this.projects[id])
-                .then(() => {
-                    this.unsavedProjects.splice(id,1);
-                })
+                    .then(() => {
+                        this.unsavedProjects.splice(id, 1);
+                    })
             },
 
-            shareWithUsers(){
+            shareWithUsers() {
                 return UserService.shareProject(this.usersToShare)
-                .then(res => {
-                    if(res.status === 200){
-                        this.usersToShare = [];
-                    }
-                })
-            }
+                    .then(res => {
+                        if (res.status === 200) {
+                            this.usersToShare = [];
+                        }
+                    })
+            },
         },
     };
 </script>
@@ -174,30 +167,32 @@
     @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 
     .flex-container {
-        box-shadow: 0 0 10px gray;
-        background: lightcyan;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
 
     .projectHeader {
-        display: flex;
-        background-color: #89c4f4;
-        border-bottom: 5px solid slategray;
+        padding: 0px;
+        border-radius: 10px;
+        border: 2px solid #222f3e;
+        overflow: hidden;
     }
 
     .projects {
-        flex-grow: 3;
         padding: 20px;
         text-align: left;
         font-size: 1.3em;
+        color: #000;
+        border-radius: 10px;
     }
 
     .addProject {
-        flex-grow: 1;
-        padding: 20px;
+        padding: 10px;
         font-size: 1.3em;
         background-color: lightpink;
-        cursor: pointer;
         color: black;
+        cursor: pointer;
     }
 
     .addProject:hover {
@@ -205,56 +200,47 @@
     }
 
 
-    .projectsPanel {
+
+    .projectPanel {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+        width: 30%;
+        padidng: 10px;
+        border-radius: 10px;
     }
 
-    .useCaseListPanel {
-        width: 60%;
-    }
-
-    .useCaseList {
-        overflow-y: auto;
+    .usecaseListPanel {
+        width: 65%;
+        height: 100%;
+        border: 2px solid #222f3e;
+        border-radius: 10px;
+        overflow: hidden;
     }
 
     .projectListPanel {
-        width: 40%;
-        border-right: 3px solid darkgray;
+        padding-top: 20px;
     }
 
     .projectList {
-        overflow-y: auto;
-        padding: 0px;
-        border-left: 5px solid black
+        padding-bottom: 10px;
     }
-
-    .selectedProjectName {
-        padding: 20px;
-        text-align: left;
-        font-size: 1.3em;
-        background-color: steelblue;
-        color: black;
-    }
-
 
     .projectName {
         padding: 20px;
+        border-radius: 10px;
         text-align: left;
         font-size: 1.1em;
-        background-color: azure;
-        border-bottom: 1px solid lightsteelblue;
+        background-color: #c8d6e5;
+        border-bottom: 1px solid #222f3e;
         cursor: pointer;
         color: black;
     }
 
     .projectName:hover {
         background-color: aliceblue;
-        border-bottom: 1px solid steelblue;
+        border-bottom: 2px solid #222f3e;
 
     }
-
-
 
     ul {
         margin: 0;
@@ -277,11 +263,15 @@
         float: right;
     }
 
+    .add {
+        float: none;
+    }
+
+
     /* width */
     ::-webkit-scrollbar {
         width: 10px;
     }
-
 
     /* Track */
     ::-webkit-scrollbar-track {
