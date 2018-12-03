@@ -8,28 +8,28 @@ export default {
         return Api().post('auth', {username: username})
     },
     fetchProjects(uuid) {
-        return Api().get('projects', {params: {uuid: uuid}})
+        return Api().get(`users/${uuid}/projects`)
     },
-    createNewProject(project) {
-        return Api().post('projects',{project: project})
+    createNewProject(uuid) {
+        return Api().post(`users/${uuid}/projects`)
     },
     deleteProject(project) {
-        return Api().delete('projects',{data: {puid: `${project}`}})
+        return Api().delete(`projects/${project}`)
     },
-    getNewTemplate() {
-        return Api().get('projects/template')
+    updateProject(project) {
+        return Api().put(`projects/${project.details.puid}`,{project: project})
     },
-    updateProject() {
-        return Api().put('projects',{project: project})
+    createNewUseCase(puid) {
+        return Api().post(`projects/${puid}/usecases`)
     },
-    createNewUseCase(usecase,puid) {
-        return Api().post('usecases', {usecase: usecase, puid: puid})
+    updateUseCase(puid,ucid,usecase){
+        return Api().put(`projects/${puid}/usecases/${ucid}`,{usecase: usecase})
     },
     deleteUseCase(ucid,puid) {
-        return Api().delete('projects',{data: {puid: `${puid}`,ucid: `${ucid}`}})
+        return Api().delete(`projects/${puid}/usecases/${ucid}`)
     },
     shareProject(puid,users) {
-        return Api().post('usecases/share', {users: users, puid: puid})
+        return Api().post(`projects/${puid}/share`,{users: users})
     }
 
 }

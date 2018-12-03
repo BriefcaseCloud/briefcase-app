@@ -9,7 +9,7 @@
                     <b>No Project Selected...</b>
                 </div>
             </div>
-            <div class="addUsecase" v-on:click="addUsecase()">
+            <div class="addUsecase" v-on:click="addNewUsecase()">
                 <i class="add fa fa-plus-circle"> </i>
             </div>
         </div>
@@ -28,7 +28,6 @@
                     <div class="usecaseDetails" v-if="index === selectedUsecase">
                         {{data.details}}
                     </div>
-
                 </li>
             </ul>
         </div>
@@ -70,14 +69,24 @@
         },
 
         methods: {
+            addNewUsecase(id,name) {
+                return UserService.createNewUseCase(this.projects[id].details.puid)
+                .then(res => {
+                    var usecase = res.data.usecase;
+                    usecase.name = name;
+                    this.projects[id].usecases.push(usecase)
+                    return true
+                })
 
-            addUsecase() {
-                const puid = this.projects[this.selectedProject].details.puid;
-                UserService.createNewUseCase(this.defaultUsecase, puid);
             },
 
-            editUsecase(id) {
-
+            saveUsecase(id) {
+                UserService.updateUseCase(this.puid,this.usecases[id].ucid,this.usecases[id])
+                .then(res => {
+                    if(res.status === 200) {
+                        return true
+                    }
+                })
             },
 
             removeUsecase(id) {
@@ -88,7 +97,6 @@
                     }
                 });
             },
-
         },
     };
 </script>
