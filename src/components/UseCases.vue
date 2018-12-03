@@ -55,7 +55,7 @@
             return {
                 selectedUsecase: null,
                 defaultUsecase: {
-                    name: "sams super usecase",
+                    name: "Test Usecase 1",
                     details: "I <3 UML",
                 },
 
@@ -72,8 +72,19 @@
         },
 
         methods: {
+<<<<<<< HEAD
             addNewUsecase() {
                 return UserService.createNewUseCase(this.selectedProject.puid)
+=======
+
+            async promptNewUseCase() {
+
+
+            },
+
+            addNewUsecase(id, name) {
+                return UserService.createNewUseCase(this.projects[id].puid)
+>>>>>>> 4a2d60afc0106a18017d3ba5d39ef9854b9371bd
                 .then(res => {
                     var usecase = res.data;
                     usecase.name = 'default';
