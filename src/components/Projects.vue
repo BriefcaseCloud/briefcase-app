@@ -13,7 +13,7 @@
                 <ul>
                     <li class="projectList" v-for="(data, index) in projects" :key="index">
                         <div class="projectName" v-on:click="selectedIndex = index">
-                            {{data.details.title}}
+                            {{data.title}}
                             <i class="fa fa-times" v-on:click="removeProject(index)"> </i>
                         </div>
                     </li>
@@ -71,7 +71,6 @@
                     .then(res => {
                         var foundProjects = Array.from(res.data.projects);
                         this.projects = foundProjects
-                        // return this.projects
                     })
             },
 
@@ -101,19 +100,25 @@
             },
 
             newProject(title) {
-                UserService.createNewProject(this.user.uuid)
+                UserService.createNewProject(this.user.userId)
                 .then(res => {
                     var project = res.data.project
                     project.title = title
                     project.usecases = []
-                    this.projects.push(project)
+                    UserService.updateProject(project)
+                    .then(res => {
+                        if(res.status === 200){
+                            this.projects.push(project)
+                        }
+                    })
+                    
                 })
             },
 
             async removeProject(id) {
-                if (this.user.userId === this.projects[id].details.owner) {
+                if (this.user.userId === this.projects[id].owner) {
                     if (await this.showConfirm()) {
-                        return UserService.deleteProject(this.projects[id].details.puid)
+                        return UserService.deleteProject(this.projects[id].puid)
                             .then(res => {
                                 if (res.status === 200) {
                                     this.projects.splice(id, 1);

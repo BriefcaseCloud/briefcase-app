@@ -17,7 +17,7 @@ export default {
         return Api().delete(`projects/${project}`)
     },
     updateProject(project) {
-        return Api().put(`projects/${project.details.puid}`,{project: project})
+        return Api().put(`projects/${project.puid}`,{project: project})
     },
     createNewUseCase(puid) {
         return Api().post(`projects/${puid}/usecases`)
