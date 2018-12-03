@@ -212,9 +212,6 @@
     .usecaseListPanel {
         width: 65%;
         height: 100%;
-        border: 2px solid #222f3e;
-        border-radius: 10px;
-        overflow: hidden;
     }
 
     .projectListPanel {
