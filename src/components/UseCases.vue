@@ -79,10 +79,11 @@
             },
 
             addNewUsecase(id, name) {
-                return UserService.createNewUseCase(this.projects[id].puid)
+                return UserService.createNewUseCase(this.projects[this.selectedProject].puid)
                 .then(res => {
                     var usecase = res.data;
                     usecase.name = 'default';
+                    this.saveUsecase(this.usecases.length-1)
                     this.projects[this.selectedProject].usecases.push(usecase)
                     this.$emit('create-usecase',usecase)
                     return true
@@ -90,7 +91,8 @@
             },
 
             saveUsecase(id) {
-                UserService.updateUseCase(this.puid,this.usecases[id].ucid,this.usecases[id])
+                // console.log(id)
+                UserService.updateUseCase(this.projects[this.selectedProject].puid,this.usecases[this.selectedProject].ucid,this.usecases[id])
                 .then(res => {
                     if(res.status === 200) {
                         this.$emit('update-usecase',{id: id, usecase: this.usecases[id]})
