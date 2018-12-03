@@ -163,12 +163,15 @@
                         }
                     })
             },
+
             removeUseCase(index){
                 this.projects[this.selectedIndex].usecases.splice(index,1);
             },
+
             createUseCase(usecase){
-                this.projects[selectedIndex].usecases.push(usecase);
+                this.projects[this.selectedIndex].usecases.push(usecase);
             },
+
             updateUseCase(usecase,index){
                 this.projects[this.selectedIndex].usecases[index] = usecase;
             }

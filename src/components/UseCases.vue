@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="addAndShare">
-                <div class="addUsecase" v-on:click="addNewUsecase()">
+                <div class="addUsecase" v-on:click="promptNewUsecase(selectedProject)">
                     <i class="add fa fa-plus-circle"> </i>
                 </div>
                 <div class="shareProject" v-on:click="$emit('share-project')">
@@ -31,7 +31,12 @@
                         </div>
                     </div>
                     <div class="usecaseDetails" v-if="index === selectedUsecase">
-                        {{data.details}}
+                        <div v-if="data.details == null">
+                            Click to add details...
+                        </div>
+                        <div v-else>
+                            {{data.details}}
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -41,7 +46,13 @@
 
 
 <script>
+    import Vue from 'vue';
     import UserService from '../services/UserService';
+    import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css';
+    import SlimDialog from 'v-slim-dialog';
+
+    Vue.use(SlimDialog);
+
 
     export default {
         name: 'UseCases',
@@ -73,18 +84,28 @@
 
         methods: {
 
-            async promptNewUseCase() {
-
-
+            promptNewUsecase() {
+                const options = {title: 'New Project', okLabel: 'Add', size: 'sm', prompt: {invalidMessage: ''}};
+                this.$dialogs.prompt('Enter usecase name:', options)
+                    .then((res) => {
+                        if (res.ok) {
+                            this.addNewUsecase(this.selectedProject, res.value)
+                        }
+                    });
             },
 
             addNewUsecase(id, name) {
                 return UserService.createNewUseCase(this.projects[this.selectedProject].puid)
                 .then(res => {
                     var usecase = res.data;
+<<<<<<< HEAD
                     usecase.name = 'default';
                     this.saveUsecase(this.usecases.length-1)
                     this.projects[this.selectedProject].usecases.push(usecase)
+=======
+                    usecase.name = name;
+                    usecase.details = null;
+>>>>>>> fc2db8c40d0339147f9fdcf362a03c67180156e3
                     this.$emit('create-usecase',usecase)
                     return true
                 })
@@ -106,7 +127,6 @@
                 UserService.deleteUseCase(this.usecases[id].ucid,this.projects[this.selectedProject].puid)
                 .then(res => {
                     if(res.status === 200) {
-                        this.usecases.splice(id, 1);
                         this.$emit('delete-usecase',id)
                     }
                 });
