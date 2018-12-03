@@ -229,7 +229,7 @@
 
     .projectName:hover {
         background-color: aliceblue;
-        border-bottom: 2px solid #222f3e;
+        border-bottom: 1px solid #222f3e;
 
     }
 

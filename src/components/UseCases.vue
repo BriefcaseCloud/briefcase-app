@@ -3,7 +3,7 @@
         <div class="usecaseHeader">
             <div class="selectedProjectName">
                 <div v-if="selectedProject != null">
-                    <b>{{projects[selectedProject].details.title}}</b>
+                    <b>{{projects[selectedProject].title}}</b>
                 </div>
                 <div v-else>
                     <b>No Project Selected...</b>
@@ -17,7 +17,6 @@
                     <i class="add fa fa-share"> </i>
                 </div>
             </div>
-
         </div>
 
         <div class="usecases">
@@ -181,6 +180,10 @@
 
     .addUsecase:hover {
         background-color: lightcoral;
+    }
+
+    .shareProject:hover {
+        background-color: lightskyblue;
     }
 
     ul {
