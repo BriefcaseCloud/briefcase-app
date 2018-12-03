@@ -78,25 +78,28 @@
                     var usecase = res.data;
                     usecase.name = 'default';
                     this.projects[this.selectedProject].usecases.push(usecase)
+                    this.$emit('create-usecase',usecase)
                     return true
                 })
-
             },
 
             saveUsecase(id) {
                 UserService.updateUseCase(this.puid,this.usecases[id].ucid,this.usecases[id])
                 .then(res => {
                     if(res.status === 200) {
+                        this.$emit('update-usecase',{id: id, usecase: this.usecases[id]})
                         return true
                     }
                 })
             },
 
             removeUsecase(id) {
-                UserService.deleteUseCase(this.usecases[id].ucid,this.puid)
+                // console.log(this.projects[this.selectedProject].puid)
+                UserService.deleteUseCase(this.usecases[id].ucid,this.projects[this.selectedProject].puid)
                 .then(res => {
                     if(res.status === 200) {
                         this.usecases.splice(id, 1);
+                        this.$emit('delete-usecase',id)
                     }
                 });
             },

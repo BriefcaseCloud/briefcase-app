@@ -26,6 +26,9 @@
 
         <div class="usecaseListPanel">
             <UseCases
+                v-on:create-usecase="createUseCase"
+                v-on:delete-usecase="removeUseCase"
+                v-on:update-usecase="updateUseCase"
                 v-on:share-project="shareProject()"
                 v-bind:projects="projects"
                 v-bind:selectedProject="selectedIndex"
@@ -155,6 +158,15 @@
                         }
                     })
             },
+            removeUseCase(index){
+                this.projects[this.selectedIndex].usecases.splice(index,1);
+            },
+            createUseCase(usecase){
+                this.projects[selectedIndex].usecases.push(usecase);
+            },
+            updateUseCase(usecase,index){
+                this.projects[this.selectedIndex].usecases[index] = usecase;
+            }
         },
     };
 </script>
