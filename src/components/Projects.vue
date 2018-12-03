@@ -4,8 +4,8 @@
             <div class="projectHeader">
                 <div class="projects"> Projects
                 </div>
-                <div class="projectSearch">
-                    <input type="text" v-model="search" placeholder="Search projects.."/>
+                <div class="searchContainer">
+                    <input class="searchBar" type="text" v-model="search" placeholder="Search projects.."/>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@
                 newTitle: String,
                 unsavedProjects: [],
                 usersToShare: [],
-                search: 'Search Projects...'
+                search: '',
             };
         },
 
@@ -185,11 +185,24 @@
         border-radius: 10px;
     }
 
-    .projectSearch {
+    .searchContainer {
+        -webkit-appearance: none;
+        width: 100%;
+        float: left;
+        overflow: hidden;
         color: black;
         cursor: pointer;
-        padding: 10px;
+        padding: 20px;
         border-radius: 10px;
+    }
+
+    .searchBar {
+        -webkit-appearance: none;
+        font-size: 1.1em;
+        float: left;
+        border-radius: 5px;
+        text-decoration: none;
+        outline: none;
     }
 
     .addProject {
