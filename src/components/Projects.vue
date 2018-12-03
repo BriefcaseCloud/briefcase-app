@@ -64,12 +64,8 @@
                 newTitle: String,
                 unsavedProjects: [],
                 usersToShare: [],
-<<<<<<< HEAD
                 search: 'Search Projects...',
-                searchresults:
-=======
-                search: '',
->>>>>>> 4a2d60afc0106a18017d3ba5d39ef9854b9371bd
+                searchresults: []
             };
         },
 
@@ -130,7 +126,7 @@
             },
             searchProjects() {
 
-            }
+            },
 
             async removeProject(id) {
                 if (this.user.userId === this.projects[id].owner) {
