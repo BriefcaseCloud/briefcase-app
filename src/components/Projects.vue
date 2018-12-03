@@ -64,7 +64,8 @@
                 newTitle: String,
                 unsavedProjects: [],
                 usersToShare: [],
-                search: 'Search Projects...'
+                search: 'Search Projects...',
+                searchresults:
             };
         },
 
@@ -113,7 +114,7 @@
                     var project = res.data.project
                     project.title = title
                     project.usecases = []
-                    console.log(project)
+                    // console.log(project)
                     UserService.updateProject(project)
                     .then(res => {
                         if(res.status === 200){
@@ -123,6 +124,9 @@
                     
                 })
             },
+            searchProjects() {
+
+            }
 
             async removeProject(id) {
                 if (this.user.userId === this.projects[id].owner) {
