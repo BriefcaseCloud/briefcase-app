@@ -31,7 +31,8 @@
     #dashboard {
         padding-left: 15%;
         padding-right: 15%;
-        position: fixed;
+        /* position: fixed; */
+        overflow: auto;
         width: 70%;
     }
 

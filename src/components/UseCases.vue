@@ -31,11 +31,46 @@
                         </div>
                     </div>
                     <div class="usecaseDetails" v-if="index === selectedUsecase">
-                        <div v-if="data.details == null">
+                        <div v-if="data == null">
                             Click to add details...
                         </div>
                         <div v-else>
-                            {{data.details}}
+                            <p>UseCase Name:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].name" :placeholder="projects[selectedProject].usecases[selectedUsecase].name"/>    
+                            </div>
+                            <p>UseCase Number:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].number" :placeholder="projects[selectedProject].usecases[selectedUsecase].number"/>    
+                            </div>
+                            <p>Goal:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].goal" :placeholder="projects[selectedProject].usecases[selectedUsecase].goal"/>    
+                            </div>
+                            <p>Level:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].level" :placeholder="projects[selectedProject].usecases[selectedUsecase].level"/>    
+                            </div>
+                            <p>Trigger:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].trigger" :placeholder="projects[selectedProject].usecases[selectedUsecase].trigger"/>    
+                            </div>
+                            <p>Primary Actor:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].primary_actor" :placeholder="projects[selectedProject].usecases[selectedUsecase].primary_actor"/>    
+                            </div>
+                            <p>Preconditions:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].preconditions" :placeholder="projects[selectedProject].usecases[selectedUsecase].preconditions"/>    
+                            </div>
+                            <p>Preconditions:</p>
+                            <div class="searchContainer"> 
+                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].preconditions" :placeholder="projects[selectedProject].usecases[selectedUsecase].preconditions"/>    
+                            </div>
+                            <div>
+                                <button type="button" v-on:click="saveUsecase(selectedUsecase)">Save</button>
+                            </div>
+                            <!-- {{data}} -->
                         </div>
                     </div>
                 </li>
@@ -56,6 +91,10 @@
 
     export default {
         name: 'UseCases',
+
+        components: {
+            SlimDialog,
+        },
 
         props: {
             projects: Array,
@@ -89,7 +128,7 @@
                 this.$dialogs.prompt('Enter usecase name:', options)
                     .then((res) => {
                         if (res.ok) {
-                            this.addNewUsecase(this.selectedProject, res.value)
+                            this.addNewUsecase(this.selectedProject, res.value);
                         }
                     });
             },
@@ -98,16 +137,16 @@
                 return UserService.createNewUseCase(this.projects[this.selectedProject].puid)
                 .then(res => {
                     var usecase = res.data;
-<<<<<<< HEAD
-                    usecase.name = 'default';
-                    this.saveUsecase(this.usecases.length-1)
-                    this.projects[this.selectedProject].usecases.push(usecase)
-=======
                     usecase.name = name;
-                    usecase.details = null;
->>>>>>> fc2db8c40d0339147f9fdcf362a03c67180156e3
-                    this.$emit('create-usecase',usecase)
-                    return true
+                    return UserService.updateUseCase(this.projects[this.selectedProject].puid,usecase.ucid,usecase)
+                    .then(res => {
+                        if(res.status === 200){
+                            this.$emit('create-usecase',usecase);
+                            return true;
+                        }
+                        return false;
+                    })
+                    
                 })
             },
 
@@ -116,20 +155,32 @@
                 UserService.updateUseCase(this.projects[this.selectedProject].puid,this.usecases[this.selectedProject].ucid,this.usecases[id])
                 .then(res => {
                     if(res.status === 200) {
-                        this.$emit('update-usecase',{id: id, usecase: this.usecases[id]})
-                        return true
+                        this.$emit('update-usecase',{id: id, usecase: this.usecases[id]});
+                        return true;
                     }
                 })
             },
 
-            removeUsecase(id) {
-                // console.log(this.projects[this.selectedProject].puid)
-                UserService.deleteUseCase(this.usecases[id].ucid,this.projects[this.selectedProject].puid)
-                .then(res => {
-                    if(res.status === 200) {
-                        this.$emit('delete-usecase',id)
-                    }
-                });
+            showConfirm() {
+                const options = {title: 'Delete UseCase', okLabel: 'Ok', size: 'sm'};
+                return this.$dialogs.confirm('Are you sure you want to delete this usecase?', options)
+                    .then((res) => {
+                        if (res.ok) {
+                            return true;
+                        }
+                        return false;
+                    });
+            },
+
+            async removeUsecase(id) {
+                if (await this.showConfirm()){
+                    return UserService.deleteUseCase(this.usecases[id].ucid,this.projects[this.selectedProject].puid)
+                    .then(res => {
+                        if(res.status === 200) {
+                            this.$emit('delete-usecase',id);
+                        }
+                    });
+                }  
             },
         },
     };
@@ -189,6 +240,7 @@
 
     .usecases {
         padding-top: 20px;
+        overflow:auto;
     }
 
     .addUsecase {
@@ -215,6 +267,26 @@
 
     .shareProject:hover {
         background-color: lightskyblue;
+    }
+
+    .searchContainer {
+        -webkit-appearance: none;
+        width: 100%;
+        float: left;
+        overflow: hidden;
+        color: black;
+        cursor: pointer;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .searchBar {
+        -webkit-appearance: none;
+        font-size: 1.1em;
+        float: left;
+        border-radius: 5px;
+        text-decoration: none;
+        outline: none;
     }
 
     ul {

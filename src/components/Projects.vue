@@ -44,6 +44,7 @@
     import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css';
     import SlimDialog from 'v-slim-dialog';
     import UserService from '../services/UserService';
+    import Share from './Share.vue';
 
     Vue.use(SlimDialog);
 
@@ -65,7 +66,8 @@
                 unsavedProjects: [],
                 usersToShare: [],
                 search: 'Search Projects...',
-                searchresults: []
+                searchresults: [],
+                users: [],
             };
         },
 
@@ -79,8 +81,8 @@
                 UserService.fetchProjects(this.user.userId)
                     .then(res => {
                         var foundProjects = Array.from(res.data.projects);
-                        this.projects = foundProjects
-                    })
+                        this.projects = foundProjects;
+                    });
             },
 
             showConfirm() {
@@ -99,30 +101,30 @@
                 this.$dialogs.prompt('Enter project name:', options)
                     .then((res) => {
                         if (res.ok) {
-                            this.newProject(res.value)
+                            this.newProject(res.value);
                         }
                     });
             },
 
             addProject() {
-                this.showPrompt()
+                this.showPrompt();
             },
 
             newProject(title) {
                 UserService.createNewProject(this.user.userId)
                 .then(res => {
-                    var project = res.data.project
-                    project.title = title
-                    project.usecases = []
+                    var project = res.data.project;
+                    project.title = title;
+                    project.usecases = [];
                     // console.log(project)
                     UserService.updateProject(project)
                     .then(res => {
                         if(res.status === 200){
-                            this.projects.push(project)
+                            this.projects.push(project);
                         }
-                    })
+                    });
                     
-                })
+                });
             },
             searchProjects() {
 
@@ -135,7 +137,7 @@
                             .then(res => {
                                 if (res.status === 200) {
                                     this.projects.splice(id, 1);
-                                    this.selectedIndex = null
+                                    this.selectedIndex = null;
                                 }
                             });
                     }
@@ -147,12 +149,20 @@
             saveProject(id) {
                 return UserService.updateProject(this.projects[id])
                     .then(() => {
-                        return true
-                    })
+                        return true;
+                    });
             },
 
             shareProject() {
-                alert("share with users");
+                this.$emit('project-users',this.projects[this.selectedIndex].users)
+                const options = {title: 'Share Project', okLabel: 'Share', size: 'lg', prompt: {invalidMessage: '',component: Share}};
+                this.$dialogs.prompt('Select Users and Permissions:', options)
+                    .then((res) => {
+                        if (res.ok) {
+                            var users = res.value
+                            console.log(users[0].user)
+                        }
+                    });
             },
 
             shareWithUsers(id) {
@@ -161,7 +171,7 @@
                         if (res.status === 200) {
                             return true;
                         }
-                    })
+                    });
             },
 
             removeUseCase(index){
@@ -174,7 +184,7 @@
 
             updateUseCase(usecase,index){
                 this.projects[this.selectedIndex].usecases[index] = usecase;
-            }
+            },
         },
     };
 </script>
@@ -247,13 +257,14 @@
         display: flex;
         flex-direction: column;
         width: 30%;
-        padidng: 10px;
+        padding: 10px;
         border-radius: 10px;
     }
 
     .usecaseListPanel {
         width: 65%;
         height: 100%;
+        overflow: auto;
     }
 
     .projectListPanel {
@@ -305,28 +316,5 @@
     .add {
         float: none;
     }
-
-
-    /* width */
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 50%;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
 
 </style>

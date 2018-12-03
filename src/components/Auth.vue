@@ -28,7 +28,10 @@ export default {
 
         const response = await UserService.fetchUsers();
    
-        this.users = response.data.usernames;
+        const userList = response.data.usernames;
+        for(var user in userList) {
+            this.users.push(userList[user].username)
+        }
     },
     async login() {
         const response = await UserService.fetchAuthToken(this.selected);
