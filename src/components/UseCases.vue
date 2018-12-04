@@ -23,7 +23,8 @@
             <ul>
                 <li class="usecase" v-for="(data, index) in usecases" :key="index">
                     <div class="usecaseTitle">
-                        <div class="usecaseName" v-on:click="(selectedUsecase === index) ? selectedUsecase = null : selectedUsecase = index">
+                        <div class="usecaseName"
+                             v-on:click="(selectedUsecase === index) ? selectedUsecase = null : selectedUsecase = index">
                             {{data.name}}
                         </div>
                         <div class="usecaseIcons">
@@ -34,43 +35,72 @@
                         <div v-if="data == null">
                             Click to add details...
                         </div>
-                        <div v-else>
+                        <div class="usecaseEditDetails" v-else>
                             <p>UseCase Name:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].name" :placeholder="projects[selectedProject].usecases[selectedUsecase].name"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                        v-model="projects[selectedProject].usecases[selectedUsecase].name"
+                                        :min-height="15"
+                                        :max-height="30"/>
                             </div>
                             <p>UseCase Number:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].number" :placeholder="projects[selectedProject].usecases[selectedUsecase].number"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                       v-model="projects[selectedProject].usecases[selectedUsecase].number"
+                                       :placeholder="index+1"
+                                        :min-height="30"
+                                        :max-height="350"/>
                             </div>
                             <p>Goal:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].goal" :placeholder="projects[selectedProject].usecases[selectedUsecase].goal"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                       v-model="projects[selectedProject].usecases[selectedUsecase].goal"
+                                       :placeholder="projects[selectedProject].usecases[selectedUsecase].goal"
+                                        :min-height="30"
+                                        :max-height="350"/>
                             </div>
                             <p>Level:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].level" :placeholder="projects[selectedProject].usecases[selectedUsecase].level"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                       v-model="projects[selectedProject].usecases[selectedUsecase].level"
+                                       :placeholder="projects[selectedProject].usecases[selectedUsecase].level"
+                                        :min-height="30"
+                                        :max-height="350"/>
                             </div>
                             <p>Trigger:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].trigger" :placeholder="projects[selectedProject].usecases[selectedUsecase].trigger"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                       v-model="projects[selectedProject].usecases[selectedUsecase].trigger"
+                                       :placeholder="projects[selectedProject].usecases[selectedUsecase].trigger"
+                                        :min-height="30"
+                                        :max-height="350"/>
                             </div>
                             <p>Primary Actor:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].primary_actor" :placeholder="projects[selectedProject].usecases[selectedUsecase].primary_actor"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                       v-model="projects[selectedProject].usecases[selectedUsecase].primary_actor"
+                                       :placeholder="projects[selectedProject].usecases[selectedUsecase].primary_actor"
+                                        :min-height="30"
+                                        :max-height="350"/>
                             </div>
                             <p>Preconditions:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].preconditions" :placeholder="projects[selectedProject].usecases[selectedUsecase].preconditions"/>    
-                            </div>
-                            <p>Preconditions:</p>
-                            <div class="searchContainer"> 
-                                <input class="searchBar" type="text" v-model="projects[selectedProject].usecases[selectedUsecase].preconditions" :placeholder="projects[selectedProject].usecases[selectedUsecase].preconditions"/>    
+                            <div class="inputContainer">
+                                <textarea-autosize
+                                        class="input"
+                                       v-model="projects[selectedProject].usecases[selectedUsecase].preconditions"
+                                       :placeholder="projects[selectedProject].usecases[selectedUsecase].preconditions"
+                                        :min-height="30"
+                                        :max-height="350"/>
                             </div>
                             <div>
                                 <button type="button" v-on:click="saveUsecase(selectedUsecase)">Save</button>
                             </div>
-                            <!-- {{data}} -->
                         </div>
                     </div>
                 </li>
@@ -84,9 +114,14 @@
     import Vue from 'vue';
     import UserService from '../services/UserService';
     import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css';
+
     import SlimDialog from 'v-slim-dialog';
 
     Vue.use(SlimDialog);
+
+    import VueTextareaAutosize from 'vue-textarea-autosize'
+
+    Vue.use(VueTextareaAutosize)
 
 
     export default {
@@ -135,30 +170,31 @@
 
             addNewUsecase(id, name) {
                 return UserService.createNewUseCase(this.projects[this.selectedProject].puid)
-                .then(res => {
-                    var usecase = res.data;
-                    usecase.name = name;
-                    return UserService.updateUseCase(this.projects[this.selectedProject].puid,usecase.ucid,usecase)
                     .then(res => {
-                        if(res.status === 200){
-                            this.$emit('create-usecase',usecase);
-                            return true;
-                        }
-                        return false;
+                        var usecase = res.data;
+                        usecase.name = name;
+                        usecase.number = this.usecases.length + 1;
+                        return UserService.updateUseCase(this.projects[this.selectedProject].puid, usecase.ucid, usecase)
+                            .then(res => {
+                                if (res.status === 200) {
+                                    this.$emit('create-usecase', usecase);
+                                    return true;
+                                }
+                                return false;
+                            })
+
                     })
-                    
-                })
             },
 
             saveUsecase(id) {
-                // console.log(id)
-                UserService.updateUseCase(this.projects[this.selectedProject].puid,this.usecases[this.selectedProject].ucid,this.usecases[id])
-                .then(res => {
-                    if(res.status === 200) {
-                        this.$emit('update-usecase',{id: id, usecase: this.usecases[id]});
-                        return true;
-                    }
-                })
+                this.selectedUsecase = null;
+                UserService.updateUseCase(this.projects[this.selectedProject].puid, this.usecases[this.selectedProject].ucid, this.usecases[id])
+                    .then(res => {
+                        if (res.status === 200) {
+                            this.$emit('update-usecase', {id: id, usecase: this.usecases[id]});
+                            return true;
+                        }
+                    })
             },
 
             showConfirm() {
@@ -173,14 +209,14 @@
             },
 
             async removeUsecase(id) {
-                if (await this.showConfirm()){
-                    return UserService.deleteUseCase(this.usecases[id].ucid,this.projects[this.selectedProject].puid)
-                    .then(res => {
-                        if(res.status === 200) {
-                            this.$emit('delete-usecase',id);
-                        }
-                    });
-                }  
+                if (await this.showConfirm()) {
+                    return UserService.deleteUseCase(this.usecases[id].ucid, this.projects[this.selectedProject].puid)
+                        .then(res => {
+                            if (res.status === 200) {
+                                this.$emit('delete-usecase', id);
+                            }
+                        });
+                }
             },
         },
     };
@@ -240,7 +276,17 @@
 
     .usecases {
         padding-top: 20px;
-        overflow:auto;
+        overflow: auto;
+    }
+
+    .usecaseDetails {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .usecaseEditDetails {
+        display: flex;
+        flex-direction: column;
     }
 
     .addUsecase {
@@ -269,23 +315,40 @@
         background-color: lightskyblue;
     }
 
-    .searchContainer {
+    .inputContainer {
+        display: flex;
         -webkit-appearance: none;
-        width: 100%;
+        width: inherit;
         float: left;
         overflow: hidden;
         color: black;
         cursor: pointer;
-        padding: 20px;
-        border-radius: 10px;
     }
 
-    .searchBar {
+    .input {
         -webkit-appearance: none;
-        font-size: 1.1em;
+        font-size: 1em;
         float: left;
         border-radius: 5px;
         text-decoration: none;
+        outline: none;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        flex-grow: 1;
+        background-color: white;
+    }
+
+    button, input[type="submit"], input[type="reset"] {
+        background: lightpink;
+        color: black;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 10px 30px;
+        margin: 20px;
+        float: right;
+        font: inherit;
+        cursor: pointer;
         outline: none;
     }
 
@@ -306,6 +369,11 @@
     i.edit, i.remove {
         float: right;
         padding: 5px;
+    }
+
+    p {
+        padding: 10px;
+        margin: 0;
     }
 
 
