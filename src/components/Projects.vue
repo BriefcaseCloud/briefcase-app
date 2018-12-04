@@ -29,7 +29,7 @@
                 v-on:create-usecase="createUseCase"
                 v-on:delete-usecase="removeUseCase"
                 v-on:update-usecase="updateUseCase"
-                v-on:share-project="shareProject()"
+                v-on:share-project="shareProject"
                 v-bind:projects="projects"
                 v-bind:selectedProject="selectedIndex"
             />
@@ -159,8 +159,8 @@
                 this.$dialogs.prompt('Select Users and Permissions:', options)
                     .then((res) => {
                         if (res.ok) {
-                            var users = res.value
-                            console.log(users[0].user)
+                            var users = res.value;
+                            console.log(users[0].user);
                         }
                     });
             },

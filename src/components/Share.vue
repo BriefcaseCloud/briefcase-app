@@ -4,7 +4,7 @@
         <v-select :options='permissions' v-model="selectedPermission"></v-select>
         <button type="button" v-on:click="addUser()">Add User</button>
         <li v-for="(data, index) in selectedNameList" :key="index">    
-            {{data}}      
+            USER: {{data.user}} PERMISSION: {{data.permission}}
         </li>
     
     </div>
@@ -78,7 +78,7 @@ export default {
             }
         }
         this.selectedObjectList.push({user: uuid, permissions: this.selectedPermission});
-        this.selectedNameList.push(this.selectedUser);
+        this.selectedNameList.push({user: this.selectedUser, permission: this.selectedPermission});
         this.selectedPermission = '';
         this.usernames.splice(this.usernames.indexOf(this.selectedUser),1);
         this.selectedUser = '';
