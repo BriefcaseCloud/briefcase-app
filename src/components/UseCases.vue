@@ -9,8 +9,8 @@
                     <b>No Project Selected...</b>
                 </div>
             </div>
-            <div class="addAndShare">
-                <div class="addUsecase" v-on:click="promptNewUsecase(selectedProject)">
+            <div class="addAndShare" v-bind:class="{disabled : (selectedProject == null)}">
+                <div  class="addUsecase" v-on:click="promptNewUsecase(selectedProject)">
                     <i class="add fa fa-plus-circle"> </i>
                 </div>
                 <div class="shareProject" v-on:click="$emit('share-project')">
@@ -241,10 +241,7 @@
         border-radius: 10px;
     }
 
-    .addAndShare {
-        display: flex;
-        flex-direction: row;
-    }
+
 
     .usecaseIcons {
         flex-grow: 1;
@@ -289,7 +286,17 @@
         flex-direction: column;
     }
 
+    .addAndShare {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .addAndShare.disabled {
+        display: none;
+    }
+
     .addUsecase {
+        opacity: inherit;
         flex-grow: 1;
         padding: 10px;
         font-size: 1.3em;
@@ -299,6 +306,7 @@
     }
 
     .shareProject {
+        opacity: inherit;
         flex-grow: 1;
         padding: 10px;
         font-size: 1.3em;
@@ -314,6 +322,8 @@
     .shareProject:hover {
         background-color: lightskyblue;
     }
+
+
 
     .inputContainer {
         display: flex;
