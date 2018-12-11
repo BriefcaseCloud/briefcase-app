@@ -116,12 +116,10 @@
     import '../../node_modules/v-slim-dialog/dist/v-slim-dialog.css';
 
     import SlimDialog from 'v-slim-dialog';
+    import VueTextareaAutosize from 'vue-textarea-autosize';
 
     Vue.use(SlimDialog);
-
-    import VueTextareaAutosize from 'vue-textarea-autosize'
-
-    Vue.use(VueTextareaAutosize)
+    Vue.use(VueTextareaAutosize);
 
 
     export default {
@@ -143,13 +141,11 @@
                     name: "Test Usecase 1",
                     details: "I <3 UML",
                 },
-
-
             };
         },
 
         computed: {
-            usecases: function () {
+            usecases: function() {
                 if (this.selectedProject != null) {
                     return this.projects[this.selectedProject].usecases;
                 }
@@ -161,21 +157,21 @@
             promptNewUsecase() {
                 const options = {title: 'New Project', okLabel: 'Add', size: 'sm', prompt: {invalidMessage: ''}};
                 this.$dialogs.prompt('Enter usecase name:', options)
-                    .then((res) => {
-                        if (res.ok) {
-                            this.addNewUsecase(this.selectedProject, res.value);
-                        }
-                    });
+                .then((res) => {
+                    if (res.ok) {
+                        this.addNewUsecase(this.selectedProject, res.value);
+                    }
+                });
             },
 
             addNewUsecase(id, name) {
                 return UserService.createNewUseCase(this.projects[this.selectedProject].puid)
-                    .then(res => {
+                    .then((res) => {
                         var usecase = res.data;
                         usecase.name = name;
                         usecase.number = this.usecases.length + 1;
                         return UserService.updateUseCase(this.projects[this.selectedProject].puid, usecase.ucid, usecase)
-                            .then(res => {
+                            .then((res) => {
                                 if (res.status === 200) {
                                     this.$emit('create-usecase', usecase);
                                     return true;
@@ -189,7 +185,7 @@
             saveUsecase(id) {
                 this.selectedUsecase = null;
                 UserService.updateUseCase(this.projects[this.selectedProject].puid, this.usecases[this.selectedProject].ucid, this.usecases[id])
-                    .then(res => {
+                    .then((res) => {
                         if (res.status === 200) {
                             this.$emit('update-usecase', {id: id, usecase: this.usecases[id]});
                             return true;
@@ -211,11 +207,11 @@
             async removeUsecase(id) {
                 if (await this.showConfirm()) {
                     return UserService.deleteUseCase(this.usecases[id].ucid, this.projects[this.selectedProject].puid)
-                        .then(res => {
-                            if (res.status === 200) {
-                                this.$emit('delete-usecase', id);
-                            }
-                        });
+                    .then((res) => {
+                        if (res.status === 200) {
+                            this.$emit('delete-usecase', id);
+                        }
+                    });
                 }
             },
         },

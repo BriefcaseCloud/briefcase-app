@@ -30,7 +30,7 @@ export default {
    
         const userList = response.data.usernames;
         for(var user in userList) {
-            this.users.push(userList[user].username)
+            this.users.push(userList[user].username);
         }
     },
     async login() {

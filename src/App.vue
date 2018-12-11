@@ -16,11 +16,15 @@
 
 <script>
     import Auth from './components/Auth.vue';
+    import Share from './components/Share.vue';
+    import Projects from './components/Projects.vue';
+    
 
     export default {
         name: 'app',
         components: {
             Auth,
+
         },
         data() {
             return {
@@ -28,17 +32,23 @@
                     userId: String,
                     username: String,
                     token: Object,
-                    isAdmin: Boolean,
-                }
+                    authenticated: false,
+                    isAdmin: false
+                },
             };
         },
         created() {
-            this.$router.replace({name: 'login'});
+            // this.$router.replace({name: 'login'});
             this.$root.$on('authToken', (authToken) => {
                 this.setAdmin(authToken);
                 this.setUserId(authToken);
                 this.setAuthenticated(authToken.token);
             });
+        },
+        mounted() {
+            if (!this.user.authenticated) {
+                this.$router.replace({name: 'login'});
+            }
         },
         watch: {
             $route(before,after){
@@ -55,9 +65,6 @@
                 this.user.userId = authToken.userId;
                 this.user.username = authToken.username;
             },
-            // getUserId() {
-            //     return this.userId;
-            // },
             setAuthenticated(token) {
                 // setter for authenticated
                 this.user.token = token;

@@ -23,7 +23,7 @@
         props: {
             // userId: Number,
             // userName: String,
-            user: Object
+            user: Object,
         },
     };
 </script>
