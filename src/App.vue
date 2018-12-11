@@ -38,12 +38,17 @@
             };
         },
         created() {
-            this.$router.replace({name: 'login'});
+            // this.$router.replace({name: 'login'});
             this.$root.$on('authToken', (authToken) => {
                 // captures the user id emited in auth
                 this.setUserId(authToken);
                 this.setAuthenticated(authToken.token);
             });
+        },
+        mounted() {
+            if (!this.user.authenticated) {
+                this.$router.replace({name: 'login'});
+            }
         },
         watch: {
             $route(before,after){

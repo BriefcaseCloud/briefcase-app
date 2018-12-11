@@ -24,7 +24,7 @@
             </div>
         </div>
         <Share v-if="showShareModal" @close="shareProject" v-bind:currentUsers="projects[selectedIndex].users"/>
-        <div class="usecaseListPanel">
+        <div class="usecaseListPanel" v-if="selectedIndex > -1">
             <UseCases
                 v-on:create-usecase="createUseCase"
                 v-on:delete-usecase="removeUseCase"
@@ -68,7 +68,7 @@
                 search: 'Search Projects...',
                 searchresults: [],
                 users: [],
-                selectedIndex: Number,
+                selectedIndex: null,
                 showShareModal: false,
             };
         },
@@ -118,8 +118,8 @@
                     var project = res.data.project;
                     project.title = title;
                     project.usecases = [];
-                    // console.log(project)
-                    UserService.updateProject(project)
+                    console.log(project)
+                    return UserService.updateProject(project)
                     .then((res) => {
                         if(res.status === 200){
                             this.projects.push(project);
