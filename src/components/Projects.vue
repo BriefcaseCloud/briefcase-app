@@ -45,7 +45,6 @@
     import SlimDialog from 'v-slim-dialog';
     import UserService from '../services/UserService';
     import Share from './Share.vue';
-    // import { eventBus } from '@/eventBus'
 
     Vue.use(SlimDialog);
 
