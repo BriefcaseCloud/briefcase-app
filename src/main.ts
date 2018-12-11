@@ -5,9 +5,13 @@ import vSelect from 'vue-select';
 
 import VeeValidate from 'vee-validate';
 
+
 Vue.use(VeeValidate);
 Vue.config.productionTip = false;
 Vue.component('v-select', vSelect);
+
+Vue.prototype.$eventBus = new Vue(); // Global event bus
+
 
 new Vue({
   router,

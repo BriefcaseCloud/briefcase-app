@@ -16,11 +16,15 @@
 
 <script>
     import Auth from './components/Auth.vue';
+    import Share from './components/Share.vue';
+    import Projects from './components/Projects.vue';
+    
 
     export default {
         name: 'app',
         components: {
             Auth,
+
         },
         data() {
             return {
@@ -30,7 +34,7 @@
                     token: Object,
                     authenticated: false,
                     isAdmin: false
-                }
+                },
             };
         },
         created() {
@@ -38,7 +42,7 @@
             this.$root.$on('authToken', (authToken) => {
                 // captures the user id emited in auth
                 this.setUserId(authToken);
-                this.setAuthenticated(authToken.token)
+                this.setAuthenticated(authToken.token);
             });
         },
         watch: {
@@ -56,9 +60,6 @@
                 this.user.userId = authToken.userId;
                 this.user.username = authToken.username;
             },
-            // getUserId() {
-            //     return this.userId;
-            // },
             setAuthenticated(token) {
                 // setter for authenticated
                 this.user.token = token;

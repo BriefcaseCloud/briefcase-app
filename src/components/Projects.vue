@@ -23,13 +23,13 @@
                 <i class="add fa fa-plus-circle"> </i>
             </div>
         </div>
-
+        <Share v-if="showShareModal" @close="shareProject" v-bind:currentUsers="projects[selectedIndex].users"/>
         <div class="usecaseListPanel">
             <UseCases
                 v-on:create-usecase="createUseCase"
                 v-on:delete-usecase="removeUseCase"
                 v-on:update-usecase="updateUseCase"
-                v-on:share-project="shareProject"
+                v-on:share-project="showShareModal = true"
                 v-bind:projects="projects"
                 v-bind:selectedProject="selectedIndex"
             />
@@ -45,6 +45,7 @@
     import SlimDialog from 'v-slim-dialog';
     import UserService from '../services/UserService';
     import Share from './Share.vue';
+    // import { eventBus } from '@/eventBus'
 
     Vue.use(SlimDialog);
 
@@ -53,6 +54,7 @@
         components: {
             UseCases,
             SlimDialog,
+            Share,
         },
         props: {
             user: {},
@@ -60,7 +62,6 @@
 
         data() {
             return {
-                selectedIndex: null,
                 projects: [],
                 newTitle: String,
                 unsavedProjects: [],
@@ -68,6 +69,8 @@
                 search: 'Search Projects...',
                 searchresults: [],
                 users: [],
+                selectedIndex: Number,
+                showShareModal: false,
             };
         },
 
@@ -79,7 +82,7 @@
         methods: {
             getProjects() {
                 UserService.fetchProjects(this.user.userId)
-                    .then(res => {
+                    .then((res) => {
                         var foundProjects = Array.from(res.data.projects);
                         this.projects = foundProjects;
                     });
@@ -112,13 +115,13 @@
 
             newProject(title) {
                 UserService.createNewProject(this.user.userId)
-                .then(res => {
+                .then((res) => {
                     var project = res.data.project;
                     project.title = title;
                     project.usecases = [];
                     // console.log(project)
                     UserService.updateProject(project)
-                    .then(res => {
+                    .then((res) => {
                         if(res.status === 200){
                             this.projects.push(project);
                         }
@@ -134,7 +137,7 @@
                 if (this.user.userId === this.projects[id].owner) {
                     if (await this.showConfirm()) {
                         return UserService.deleteProject(this.projects[id].puid)
-                            .then(res => {
+                            .then((res) => {
                                 if (res.status === 200) {
                                     this.projects.splice(id, 1);
                                     this.selectedIndex = null;
@@ -153,25 +156,16 @@
                     });
             },
 
-            shareProject() {
-                this.$emit('project-users',this.projects[this.selectedIndex].users)
-                const options = {title: 'Share Project', okLabel: 'Share', size: 'lg', prompt: {invalidMessage: '',component: Share}};
-                this.$dialogs.prompt('Select Users and Permissions:', options)
-                    .then((res) => {
-                        if (res.ok) {
-                            var users = res.value;
-                            console.log(users[0].user);
-                        }
-                    });
-            },
+            shareProject(shareUserList) {
+                this.showShareModal = false; 
 
-            shareWithUsers(id) {
-                return UserService.shareProject(this.projects[id].details.puid,this.usersToShare)
-                    .then(res => {
+                return UserService.shareProject(this.projects[this.selectedIndex].puid,shareUserList)
+                    .then((res) => {
                         if (res.status === 200) {
                             return true;
                         }
                     });
+
             },
 
             removeUseCase(index){

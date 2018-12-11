@@ -30,7 +30,7 @@ export default {
    
         const userList = response.data.usernames;
         for(var user in userList) {
-            this.users.push(userList[user].username)
+            this.users.push(userList[user].username);
         }
     },
     async login() {
@@ -39,9 +39,9 @@ export default {
             var user = {};
             user.token = response.data.token;
             user.username = this.selected;
-            user.userId = response.data.id
+            user.userId = response.data.id;
             // console.log(response.data.isAdmin)
-            user.isAdmin = response.data.isAdmin
+            user.isAdmin = response.data.isAdmin;
             this.$root.$emit('authToken', user); // emits the user id to the parent app to set the current user
             this.$router.replace({ path: `/user/${user.userId}/dashboard` }); // reroutes to user home page
         } else {
