@@ -28,17 +28,16 @@
                     userId: String,
                     username: String,
                     token: Object,
-                    authenticated: false,
-                    isAdmin: false
+                    isAdmin: Boolean,
                 }
             };
         },
         created() {
             this.$router.replace({name: 'login'});
             this.$root.$on('authToken', (authToken) => {
-                // captures the user id emited in auth
+                this.setAdmin(authToken);
                 this.setUserId(authToken);
-                this.setAuthenticated(authToken.token)
+                this.setAuthenticated(authToken.token);
             });
         },
         watch: {
@@ -64,6 +63,11 @@
                 this.user.token = token;
                 this.user.authenticated = true;
             },
+
+            setAdmin(authToken) {
+                this.user.isAdmin = authToken.isAdmin;
+            },
+
             logout() {
                 // removes user and resets authenticated status on logout
                 this.user.userId = '';

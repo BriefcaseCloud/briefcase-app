@@ -50,11 +50,12 @@ export default {
     //   return Boolean(String(this.model).trim())
         return true
     },
+
     getUsers(){
         UserService.fetchUsers()
         .then(res => {
-            var users = []
-            var projectUsers
+            var users = [];
+            var projectUsers;
             res.data.usernames.forEach(user => this.usernames.push(user.username))
             this.users = res.data.usernames
             this.$on('project-users', (projectUsers ) => {
@@ -68,6 +69,7 @@ export default {
             })
         })
     },
+
     addUser() {
         var uuid = ''
         for (var index in this.users) {

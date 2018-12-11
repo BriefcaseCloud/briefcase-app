@@ -2,6 +2,7 @@
     <div id="dashboard">
         <div id="username">
             <h1>Signed in as {{user.username}}</h1>
+            <Admin v-if="user.isAdmin"/>
         </div>
         <Projects :user="user"/>
     </div>
@@ -9,13 +10,14 @@
 
 <script>
     import Projects from '../components/Projects.vue';
-
+    import Admin from '../components/Admin.vue';
 
     export default {
         name: 'dashboard',
 
         components: {
             Projects,
+            Admin,
         },
 
         props: {
@@ -38,5 +40,7 @@
 
     #username {
         text-align: left;
+        display: flex;
+        flex-direction: row;
     }
 </style>
